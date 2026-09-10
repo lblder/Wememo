@@ -1,3 +1,4 @@
+export type MessageSource = 'synthetic' | 'json-import'
 export type MessageDirection = 'incoming' | 'outgoing'
 export type MessageType = 'text'
 
@@ -26,13 +27,32 @@ export interface Message {
   text: string
 }
 
-export function compareMessages(left: Message, right: Message): number {
-  const timestampOrder = left.timestamp.localeCompare(right.timestamp)
+export interface CanonicalMessage {
+  id: string
+  source: MessageSource
+  sourceMessageId: string
+  accountId: string
+  conversationId: string
+  senderId: string
+  senderName?: string
+  direction: MessageDirection
+  timestamp: number
+  type: MessageType
+  text: string
+}
+
+export function compareMessages(
+  left: CanonicalMessage,
+  right: CanonicalMessage
+): number {
+  const timestampOrder = left.timestamp - right.timestamp
 
   return timestampOrder !== 0 ? timestampOrder : left.id.localeCompare(right.id)
 }
 
-export function sortMessages(messages: readonly Message[]): Message[] {
+export function sortMessages(
+  messages: readonly CanonicalMessage[]
+): CanonicalMessage[] {
   return [...messages].sort(compareMessages)
 }
 

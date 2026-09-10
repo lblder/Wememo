@@ -1,6 +1,14 @@
-export type DesktopPlatform = 'darwin' | 'linux' | 'win32' | 'unknown'
-
-
+import type { CanonicalMessage } from './message'
+import type {
+  MessageQuery,
+  MessageScopeQuery,
+  MessageSearchQuery,
+  MessageSearchResult
+} from './message-query'
+import type {
+  ConversationScope,
+  ImportMessagesResult
+} from './message-ipc'
 /**
  * 桌面能力 API 契约。
  *
@@ -15,7 +23,47 @@ export type DesktopPlatform = 'darwin' | 'linux' | 'win32' | 'unknown'
  * @created 2026-09-09
  */
  
+export type DesktopPlatform =
+  | 'darwin'
+  | 'linux'
+  | 'win32'
+  | 'unknown'
+
+/**
+ * Main 与 Preload 使用的 IPC 通道名称。
+ */
+export const DESKTOP_CHANNELS = {
+  importMessages: 'messages:import-json',
+  listConversationScopes: 'messages:list-scopes',
+  listMessages: 'messages:list',
+  searchMessages: 'messages:search',
+  countMessages: 'messages:count'
+} as const
+
+/**
+ * Renderer 能够使用的桌面能力契约。
+ *
+ * Renderer 不直接访问：
+ * - SQLite
+ * - 文件系统
+ * - ipcRenderer
+ * - Electron Main API
+ */
 export interface DesktopApi {
   getPlatform: () => DesktopPlatform
-}
 
+  chooseAndImportMessages:
+    () => Promise<ImportMessagesResult>
+
+  listConversationScopes:
+    () => Promise<ConversationScope[]>
+
+  listMessages:
+    (query: MessageQuery) => Promise<CanonicalMessage[]>
+
+  searchMessages:
+    (query: MessageSearchQuery) => Promise<MessageSearchResult>
+
+  countMessages:
+    (query: MessageScopeQuery) => Promise<number>
+}

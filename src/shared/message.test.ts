@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { syntheticConversation } from './fixtures/synthetic-conversation'
-import { sortMessages, type Message } from './message'
+import { sortMessages, type CanonicalMessage } from './message'
 
 describe('synthetic conversation fixture', () => {
   it('uses unique message IDs', () => {
@@ -11,12 +11,28 @@ describe('synthetic conversation fixture', () => {
   })
 
   it('sorts by timestamp and uses ID as a stable secondary key', () => {
-    const timestamp = '2026-09-08T18:20:00+08:00'
-    const sameTimeMessages: Message[] = [
-      { ...syntheticConversation[0], id: 'synthetic-b', timestamp },
-      { ...syntheticConversation[0], id: 'synthetic-a', timestamp }
+    const timestamp = Date.parse('2026-09-08T18:20:00+08:00')
+
+    const sameTimeMessages: CanonicalMessage[] = [
+      {
+        ...syntheticConversation[0],
+        id: 'synthetic-b',
+        sourceMessageId: 'synthetic-b',
+        timestamp
+      },
+      {
+        ...syntheticConversation[0],
+        id: 'synthetic-a',
+        sourceMessageId: 'synthetic-a',
+        timestamp
+      }
     ]
-    const unsorted = [syntheticConversation[3], ...sameTimeMessages, syntheticConversation[0]]
+
+    const unsorted = [
+      syntheticConversation[3],
+      ...sameTimeMessages,
+      syntheticConversation[0]
+    ]
 
     expect(sortMessages(unsorted).map((message) => message.id)).toEqual([
       'synthetic-001',
@@ -26,14 +42,41 @@ describe('synthetic conversation fixture', () => {
     ])
   })
 
-  it('has a non-empty conversationId on every message', () => {
-    expect(syntheticConversation.every((message) => message.conversationId.trim().length > 0)).toBe(true)
+  it('has a non-empty accountId and conversationId on every message', () => {
+    expect(
+      syntheticConversation.every(
+        (message) =>
+          message.accountId.trim().length > 0 &&
+          message.conversationId.trim().length > 0
+      )
+    ).toBe(true)
+  })
+
+  it('has a non-empty sourceMessageId on every message', () => {
+    expect(
+      syntheticConversation.every(
+        (message) => message.sourceMessageId.trim().length > 0
+      )
+    ).toBe(true)
+  })
+
+  it('uses valid numeric timestamps', () => {
+    expect(
+      syntheticConversation.every(
+        (message) =>
+          typeof message.timestamp === 'number' &&
+          Number.isFinite(message.timestamp)
+      )
+    ).toBe(true)
   })
 
   it('only uses incoming or outgoing directions', () => {
     const allowedDirections = new Set(['incoming', 'outgoing'])
 
-    expect(syntheticConversation.every((message) => allowedDirections.has(message.direction))).toBe(true)
+    expect(
+      syntheticConversation.every((message) =>
+        allowedDirections.has(message.direction)
+      )
+    ).toBe(true)
   })
 })
-

@@ -1,0 +1,46 @@
+{
+  "format": "wememo-json-v1",
+  "accountId": "json-account-self",
+  "messages": [
+    {
+      "sourceMessageId": "json-001",
+      "conversationId": "json-conversation-xiaolin",
+      "senderId": "xiaolin-json",
+      "senderName": "小林（JSON测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-09T19:00:00+08:00",
+      "type": "text",
+      "text": "今天有点累。"
+    },
+    {
+      "sourceMessageId": "json-002",
+      "conversationId": "json-conversation-xiaolin",
+      "senderId": "self-json",
+      "senderName": "我（JSON测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-09T19:01:00+08:00",
+      "type": "text",
+      "text": "今天事情很多吗？"
+    },
+    {
+      "sourceMessageId": "json-003",
+      "conversationId": "json-conversation-xiaolin",
+      "senderId": "xiaolin-json",
+      "senderName": "小林（JSON测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-09T19:03:00+08:00",
+      "type": "text",
+      "text": "下午连续开了三个会。"
+    },
+    {
+      "sourceMessageId": "json-004",
+      "conversationId": "json-conversation-xiaolin",
+      "senderId": "self-json",
+      "senderName": "我（JSON测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-09T19:05:00+08:00",
+      "type": "text",
+      "text": "那晚上早点休息。"
+    }
+  ]
+}
