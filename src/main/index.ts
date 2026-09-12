@@ -1,3 +1,6 @@
+import { ReasoningService } from './services/reasoning-service'
+import { loadDeepSeekConfiguration } from './providers/deepseek-config'
+import { DeepSeekProvider } from './providers/deepseek-provider'
 /**
  * Electron 主进程入口。
  *
@@ -13,10 +16,13 @@ import {
   app,
   BrowserWindow,
   dialog,
-  ipcMain
+  ipcMain,
+  net,
+  type IpcMainInvokeEvent
 } from 'electron'
 
 import { readFileSync } from 'node:fs'
+import { pathToFileURL } from 'node:url'
 import { join } from 'node:path'
 import type { DatabaseSync } from 'node:sqlite'
 
@@ -54,6 +60,9 @@ import {
   InteractionAnalysisService
 } from './analytics/interaction-analysis-service'
 
+let reasoningService: ReasoningService | undefined
+let applicationWindow: BrowserWindow | undefined
+
 let database: DatabaseSync | undefined
 let messageRepository:
   | SqliteMessageRepository
@@ -88,6 +97,13 @@ function initializeDatabase(): void {
     new InteractionAnalysisService(
       messageRepository
     )
+
+  const deepseek = loadDeepSeekConfiguration(process.env)
+  reasoningService = new ReasoningService(
+    interactionAnalysisService,
+    deepseek.configuration ? new DeepSeekProvider(deepseek.configuration, net.fetch.bind(net)) : undefined,
+    deepseek.status
+  )
 }
 
 function getInteractionAnalysisService():
@@ -103,7 +119,25 @@ function getInteractionAnalysisService():
 
 
 
+function isTrustedReasoningSender(event: IpcMainInvokeEvent): boolean {
+  if (!applicationWindow || event.sender !== applicationWindow.webContents ||
+      event.senderFrame !== applicationWindow.webContents.mainFrame) return false
+  const expected = process.env.ELECTRON_RENDERER_URL
+  const trustedUrl = expected ?? pathToFileURL(join(__dirname, '../renderer/index.html')).href
+  return new URL(event.senderFrame.url).href === new URL(trustedUrl).href
+}
+
 function registerMessageIpc(): void {
+  ipcMain.handle(DESKTOP_CHANNELS.reasoningStatus, (event) => {
+    if (!isTrustedReasoningSender(event) || !reasoningService) throw new Error('Reasoning request rejected')
+    return reasoningService.getStatus()
+  })
+  ipcMain.handle(DESKTOP_CHANNELS.generateReasoning, (event, request: unknown) => {
+    if (!isTrustedReasoningSender(event) || !reasoningService) {
+      return { ok: false, error: { code: 'invalid-request', message: '请求来源无效。' } }
+    }
+    return reasoningService.generate(request)
+  })
   ipcMain.handle(
     DESKTOP_CHANNELS.listConversationScopes,
     () => {
@@ -234,6 +268,11 @@ function createWindow(): void {
         sandbox: true
       }
     })
+
+  applicationWindow = mainWindow
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  mainWindow.webContents.on('will-navigate', (event) => event.preventDefault())
+  mainWindow.on('closed', () => { applicationWindow = undefined })
 
   mainWindow.once(
     'ready-to-show',

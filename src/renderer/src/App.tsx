@@ -1,3 +1,4 @@
+import { ReasoningPanel } from './ReasoningPanel'
 import type { SemanticEvidence } from '../../shared/semantic-evidence'
 import {
   useEffect,
@@ -411,6 +412,14 @@ export function App(): React.JSX.Element {
             </strong>
           </div>
         </div>
+
+        {selectedScope && (
+          <ReasoningPanel
+            key={JSON.stringify([selectedScope.accountId, selectedScope.conversationId])}
+            accountId={selectedScope.accountId}
+            conversationId={selectedScope.conversationId}
+          />
+        )}
 
         {analysis && (
           <section className="analysis-panel">

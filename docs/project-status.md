@@ -3,6 +3,115 @@
 | Field | Result |
 |---|---|
 | Date | 2026-09-12 |
+| Stage | D5-F Real Provider / Service / Desktop Integration |
+| Status | **PASS — controlled desktop reasoning; known limits retained** |
+| Baseline | `30fdaaf` / `d5-reasoning-core` |
+| Recovery tag | `d5-desktop-reasoning` |
+
+## Implementation
+
+- User-selected first adapter: DeepSeek (`deepseek-flash`). Adapter lives under `src/main/providers`, outside frozen Core.
+  No SDK/dependency added; production injects Electron `net.fetch` for system proxy use.
+- Main environment configuration only: no secret IPC, Renderer settings, localStorage,
+  committed .env, provider-response logging or secret getters. UI receives safe status
+  (provider/model/configured/message). Endpoint accepts only HTTPS api.deepseek.com (root or /v1 base path), with no URL credentials/query/redirect following.
+- Adapter sends two prompt messages, JSON-object mode, thinking disabled, no streaming,
+  no tool calling, 4096 output-token limit. Timeout is 60 seconds; response envelope
+  limited to 1 MB. HTTP/auth/rate-limit/network/timeout errors become safe error codes.
+  Truncated, empty and tool responses fail. No retry or automatic request on startup.
+- ReasoningService accepts only accountId/conversationId/days (1–31). It creates the
+  ContextPack through InteractionAnalysisService, injects the provider into the unchanged
+  InteractionReasoner, and returns only validated reasoning with its exact local citation
+  context. No-data/configuration errors avoid calls; a busy gate prevents concurrent calls.
+- New status/generate IPC channels use narrow Preload methods. Main checks sender window,
+  main frame and exact application URL. Navigation/new-window creation is blocked.
+  Renderer cannot submit prompts, keys, endpoints, evidence or ContextPacks.
+- New ReasoningPanel has readiness, cost/data disclosure, loading/error states, empty
+  finding handling and expandable canonical D4 citations with original text/messageId.
+  Scope-keyed remounting discards old results and suppresses stale asynchronous updates.
+- Frozen D4 contracts/analytics and D5 Core remain unchanged. No multi-agent/tool calling.
+
+## Acceptance Evidence
+
+- Baseline: typecheck PASS, 21 test files / 230 tests PASS.
+- Final automated checks: typecheck PASS, 26 test files / 300 tests PASS, build PASS.
+  Added 70 tests across request validation, config/HTTP adapter, Service integration and
+  Renderer static rendering. Vitest now includes .test.tsx files with automatic JSX.
+- Follow-up: accept empty tool_calls arrays as text responses; show safe JSON/field/envelope
+  diagnostics on rejected output. A live attempt failed exact-key validation at
+  alternativeExplanations[0]. DeepSeek now receives explicit per-object field constraints
+  and a pre-output checklist; validators remain unchanged and no output repair or automatic
+  retry is performed. Three adapter/service regressions cover extra confidence, missing id
+  and claim substituted for explanation. The rejected historical response was not retained;
+  its specific missing/extra keys cannot be established retrospectively. The Service now
+  reports missing schema keys and known extra keys, counting arbitrary names without
+  exposing them. Raw output is request-local only, never persisted or returned on failure.
+- Adapter tests use injected HTTP stubs: request shape, JSON mode, headers, safe endpoints,
+  safe errors, timeout/no retry, response limits and malformed/truncated responses.
+- Integration: synthetic Demo → in-memory SQLite → Service → actual adapter protocol
+  with stubbed transport → Core → validated canonical citations PASS. These are not
+  claims of successful calls to the real DeepSeek service.
+- Earlier GUI smoke check covered missing-key status and disclosure before the provider switch.
+- Live diagnosis on 2026-09-12: current source + local credentials + official deepseek-flash
+  passed contract and citation checks on two synthetic Demo requests (fixed reference time
+  and current-time 7-day window). A third request from the restarted Electron GUI also
+  passed, displaying 45 analyzed messages, detected status, findings, alternatives and
+  uncertainties. Expanded semantic counter evidence showed canonical D4 ID, messageId and
+  source excerpt. No real user conversation was used for these checks.
+- The pre-diagnosis Electron process started after the updated prompt build, so stale Main
+  code was ruled out for the reported failure. Current live checks did not reproduce that
+  response. Passing calls do not establish future schema compliance: JSON-object mode
+  guarantees JSON syntax, not the exact application contract. Frozen validators are intact.
+
+## Local Configuration for Live Verification
+
+Create the repository-external configuration using the interactive script:
+
+```zsh
+cd /Users/lbld/Documents/ChatGPT/Wememo
+zsh scripts/configure-deepseek.zsh
+source "$HOME/.config/wememo/deepseek.env"
+pnpm dev
+```
+
+The script prompts for base URL, model ID and a hidden API key, saving a plaintext file
+with permissions 600 in a directory with permissions 700. It refuses to overwrite an
+existing file. The key is not part of shell command history. Main reads environment
+variables on startup; the file must be sourced in the same terminal before launching.
+
+- `WEMEMO_DEEPSEEK_API_KEY`: takes precedence over `DEEPSEEK_API_KEY`.
+- `WEMEMO_DEEPSEEK_MODEL`: defaults to `deepseek-flash`.
+- `WEMEMO_DEEPSEEK_BASE_URL`: defaults to `https://api.deepseek.com`.
+  Only the official HTTPS host with an empty or `/v1` base path is accepted.
+- Request uses `thinking: { type: 'disabled' }` and JSON-object output mode.
+
+Select the synthetic Demo and click “生成关系变化解释” to send its selected evidence.
+Expand findings and alternatives to inspect canonical citations.
+
+Protocol checked against [DeepSeek quick start](https://api-docs.deepseek.com/)
+and [Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion/).
+
+## Remaining Limits
+
+- The earlier exact-key failure remains unreproduced. JSON mode does not guarantee the
+  exact schema; invalid model outputs continue to be rejected with safe field diagnostics.
+- No in-app key storage or settings editor; no cancel/retry/streaming UI. Switching
+  conversation hides the old result but an already sent request may still incur cost.
+- Existing prompt-only semantic safety and evidence-selection limitations remain.
+- The earlier D2 header is unchanged. This milestone freezes the controlled DeepSeek
+  desktop path. PASS means valid outputs reach the GUI with traceable citations and invalid
+  outputs are rejected; it does not promise every model response conforms to the schema.
+  D5-G implementation is outside this milestone.
+
+---
+
+The following D5 Core, D4 and D1 sections are historical acceptance records.
+
+# D5-A–E Historical Record
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-12 |
 | Stage | D5-A–E Reasoning Core |
 | Status | **PASS** |
 | Baseline | `d3509d6` / `d4-evidence-layer` |

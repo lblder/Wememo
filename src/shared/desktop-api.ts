@@ -1,3 +1,4 @@
+import type { GenerateReasoningRequest, GenerateReasoningResponse, ReasoningProviderStatus } from './reasoning-ipc'
 import type { CanonicalMessage } from './message'
 import type {
   MessageQuery,
@@ -37,6 +38,8 @@ export type DesktopPlatform =
  * Main 与 Preload 使用的 IPC 通道名称。
  */
 export const DESKTOP_CHANNELS = {
+  reasoningStatus: 'reasoning:status',
+  generateReasoning: 'reasoning:generate',
   importMessages: 'messages:import-json',
   listConversationScopes: 'messages:list-scopes',
   listMessages: 'messages:list',
@@ -57,6 +60,9 @@ export const DESKTOP_CHANNELS = {
  * - Electron Main API
  */
 export interface DesktopApi {
+  getReasoningStatus: () => Promise<ReasoningProviderStatus>
+  generateReasoning: (request: GenerateReasoningRequest) => Promise<GenerateReasoningResponse>
+
   getPlatform: () => DesktopPlatform
 
   chooseAndImportMessages:

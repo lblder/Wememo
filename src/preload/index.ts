@@ -1,3 +1,4 @@
+import type { GenerateReasoningRequest } from '../shared/reasoning-ipc'
 import {
   contextBridge,
   ipcRenderer
@@ -35,6 +36,8 @@ const platform =
 
 const desktopApi: DesktopApi = Object.freeze({
   getPlatform: () => platform,
+  getReasoningStatus: () => ipcRenderer.invoke(DESKTOP_CHANNELS.reasoningStatus),
+  generateReasoning: (request: GenerateReasoningRequest) => ipcRenderer.invoke(DESKTOP_CHANNELS.generateReasoning, request),
 
   chooseAndImportMessages: () =>
     ipcRenderer.invoke(

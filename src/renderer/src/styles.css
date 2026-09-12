@@ -236,3 +236,27 @@ h1 {
   }
 }
 
+
+.reasoning-panel {
+  margin: 20px 24px;
+  padding: 20px;
+  border: 1px solid #c6cfcb;
+  border-radius: 12px;
+  background: #fff;
+  line-height: 1.65;
+}
+.reasoning-panel h2 { margin-top: 0; font-size: 20px; }
+.reasoning-panel button {
+  padding: 9px 14px;
+  border: 1px solid #0d6a3a;
+  border-radius: 7px;
+  background: #0d6a3a;
+  color: white;
+  cursor: pointer;
+}
+.reasoning-panel button:disabled { opacity: .5; cursor: not-allowed; }
+.reasoning-panel [role="alert"] { color: #9f3028; }
+.reasoning-meta { color: #68736e; font-size: 13px; }
+.reasoning-citation { margin: 8px 0; padding: 9px 12px; background: #eef5f0; border-radius: 6px; }
+.reasoning-citation summary { cursor: pointer; color: #0d6a3a; }
+.reasoning-citation small, .reasoning-citation blockquote { overflow-wrap: anywhere; }
