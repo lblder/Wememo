@@ -1,6 +1,6 @@
 # D5-G：单 Agent 证据追问设计
 
-状态：设计草案，尚未实现。日期：2026-09-12。
+状态：G1/G2 PASS，恢复标签 `d5-g-agent-runtime`；G3–G5 尚未实施。日期：2026-09-12。
 实现基线：`1883516` / `d5-desktop-reasoning`；D4 与 D5 Core 保持冻结。
 
 ## 目标与采用条件
@@ -125,7 +125,10 @@ messages、ContextPack、tool definitions、API Key 或模型 endpoint。Main �
 ## 上下文、证据和运行预算
 
 1. 一次读取生成 Pack 并固定 referenceTime，运行中导入新消息不能改变该次结果。
-2. 复用 D5 Core `buildReasoningPrompt` 的预算投影及 alias 绑定，不复制或修改 D4 ID 规则。
+2. G1/G2 使用独立 `Agent Evidence Catalog Projection`，不调用 D5-F `buildReasoningPrompt`。
+   仅沿用预算选择、别名与截断原则；初始目录精确包含 id/kind/direction/静态 label。
+   正文与完整 metric values 保留在本地不可变内容表，读取后才返回。
+   alias 为 `ev-<随机 run UUID>-003` 等形式；随机命名空间用于拒绝跨 run 重放，不含 scope 信息。
 3. 模型初始仅获得问题、覆盖范围与目录元数据。目录中的 alias 不等于证据内容已交付；
    runtime 单独记录实际返回的 `deliveredIds`，最终只能引用其中的 ID。
 4. 最大证据数 24、单原文 500 Unicode 码点、catalog 12,000 码点沿用 D5。
@@ -173,5 +176,15 @@ Agent 能改善结构稳定性。PAT-07/08/11/13 的原则适用于限定模型�
 只看到目录而未读取的引用、反向证据误作 support、额外 confidence、缺少 id、空 findings、
 提示注入原文、无数据、429、超时、重复调用、达到最后一轮仍调用工具、取消后的迟到结果。
 
-架构走查结果：固定 scope、证据来源、alias 所有权、无数据出口、预算与取消语义已定义。
-这是一份文档设计；新增工具与运行时尚未编码，Provider 协议与用户追问体验尚未实测。
+G1/G2 实现位于 `src/main/evidence-agent`。Runner 接收 Main 内部的 `{contextPack, question}`，
+它不构成 IPC；校验后深拷贝并递归冻结快照、投影与模型请求。只在 `read_evidence` 成功返回、
+未取消且工具响应可放入下一次请求时更新 deliveredIds；read_metrics 不更新此集合。
+最终引用使用 deliveredIds 对应的绑定子集，调用冻结的结构与引用校验器后映射回 canonical ID。
+重复 call ID 被拒绝；不同 call ID 的重复只读查询允许执行，但每次消耗工具预算。
+模型/工具/整轮预算由程序强制执行。超时和取消通过 race 及时结束等待，忽略迟到结果；
+同步内存读取在完成时检查截止时间，不声称能抢占 JavaScript 同步执行或撤销远程计费。
+
+本地验证：新增 74 项离线测试覆盖元数据目录、按需交付、全批次预检、引用方向、
+缺少 support 时的空 findings、跨 run 重放、完整请求序列化预算、并发隔离、超时、取消和安全错误。
+Prompt injection 测试验证引文的数据位置及运行时工具边界，不代表真实模型抗注入能力已验证。
+G3 实际 Provider 协议、G4 IPC/UI 与 G5 用户追问体验仍未实施；本轮没有真实网络调用。

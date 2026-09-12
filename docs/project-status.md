@@ -1,4 +1,52 @@
-# Project Status
+# D5-G G1/G2 Acceptance
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-12 |
+| Stage | Tool contracts / on-demand evidence / bounded Mock runner |
+| Status | **PASS — bounded Agent runtime frozen before G3** |
+| Baseline | `a9bc5af` / D5-F tag `d5-desktop-reasoning` at `1883516` |
+| Recovery tag | `d5-g-agent-runtime` |
+
+- New isolated module: `src/main/evidence-agent`. No real provider adapter, Renderer,
+  IPC, package dependency, SQLite repository or frozen D4/D5-F code changes.
+- ToolCallingProvider is a separate port with final/tool-call responses, an AbortSignal
+  boundary and safe typed provider errors. Mock supports scripted, deferred and invalid responses.
+- A validated Pack is cloned and recursively frozen before the first await. An independent
+  projection selects support/counter/context with 24-item / 500-code-point excerpt /
+  12,000-code-point content limits. D5-F's final prompt builder is never invoked.
+- Initial user data contains question, coverage, metadata-only catalog and empty deliveredIds.
+  Static labels prevent source labels from smuggling excerpts or metric values into the index.
+  Identity fields remain local; exact identifiers in source text/question are redacted.
+- Random run UUIDs namespace aliases. Only current catalog aliases are accepted by read_evidence
+  (1–6 unique aliases). Whole batches and cumulative budgets are validated before any read.
+  Extra parameters, unknown tools, canonical IDs, stale aliases and repeated call IDs fail.
+- read_metrics returns fixed-snapshot numeric metrics and status metadata, never marks evidence
+  delivered. read_evidence returns bounded content and then updates deliveredIds. Distinct-call-ID
+  repeat reads count toward tool budget while delivered aliases are deduplicated.
+- Runner caps calls at 3 model / 4 tool, 60 s per model / 1 s per tool / 120 s per run,
+  32,000 code points per serialized request and 4,096 requested output tokens. Third-call tools
+  are refused. No retry. Over-budget tool responses are not marked delivered or sent onward.
+- Final output passes existing strict JSON/schema validation, then citations against only delivered
+  aliases and their bindings, then canonical ID restoration. Empty findings remain valid.
+- Per-run in-memory state and safe trace are isolated across concurrent runs. Cancellation and
+  timeouts abort step signals, reject promptly even if a provider ignores abort, and discard late
+  responses. No raw prompts/output/errors are logged or persisted by production modules.
+- Validation: typecheck PASS; 30 test files / 374 tests PASS (74 new tests in 4 files);
+  production build PASS; git diff --check PASS. Frozen paths were compared with
+  d5-desktop-reasoning and have no changes.
+- Limits: actual model compliance, semantic entailment and real provider cancellation remain untested.
+  Character budgets are not token or monetary guarantees; synchronous JS cannot be forcibly preempted.
+  G1/G2 is accepted as a separate runtime milestone before the G3 adapter.
+- Pre-G3 review confirmed all five identity/delivery/atomicity/trace boundaries. Existing privacy
+  tests now explicitly check every canonical evidence ID and forbidden identity key in read_metrics,
+  alias-only read_evidence output and safe failure metadata; the test count remains 374.
+
+See [updated D5-G blueprint](design/d5-g-blueprint.md) for the contract and implementation sequence.
+
+---
+
+# D5-F Historical Acceptance
 
 | Field | Result |
 |---|---|
