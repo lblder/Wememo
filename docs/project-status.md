@@ -3,6 +3,100 @@
 | Field | Result |
 |---|---|
 | Date | 2026-09-12 |
+| Stage | D5-A–E Reasoning Core |
+| Status | **PASS** |
+| Baseline | `d3509d6` / `d4-evidence-layer` |
+
+## Contracts and Pipeline
+
+- Reasoning Contract Version: `wememo-interaction-reasoning-v1`.
+- Reasoning Prompt Policy Version: `wememo-reasoning-prompt-v1`.
+- Provider abstraction receives only systemPrompt/userPrompt/responseFormat and
+  returns text/providerId/optional modelId. Mock Provider only; it returns a fixed
+  response and records callCount and a copied lastRequest for tests.
+- InteractionReasoner accepts only AnalysisContextPack. Ordered pipeline:
+  context validation → detached snapshot → prompt builder → provider → strict JSON
+  parser → output validator → citation validator → canonical-ID reasoning result.
+  Snapshotting before await prevents later caller changes affecting citation checks.
+- Provider failure, JSON parse failure, reasoning schema failure, invalid context
+  and invalid citation have distinct error types. No automatic repair, retry or streaming.
+- Output has summary, cited findings with qualitative low/medium/high confidence,
+  cited alternativeExplanations and nonempty uncertainties. Exact-key validation
+  rejects extra fields, missing citations, duplicate IDs and numeric confidence.
+  Empty finding/alternative arrays are allowed when the prompt lacks usable evidence.
+
+## Prompt Privacy and Evidence Identity
+
+- A real D4 integration conflict was identified: semantic evidence IDs embed accountId
+  and conversationId. The user selected D5-local aliases rather than changing frozen D4.
+- Prompt catalog uses request-local `evidence-N` aliases. `allowedEvidenceIds` contains
+  exactly the aliases actually sent. `evidenceIdBindings` keeps alias → original D4 ID
+  locally and is never passed to the provider. Citation validation restores canonical
+  IDs in the returned result, preserving original message provenance through D4.
+- No scope, sender IDs/names, source message IDs, generatedAt or full Context snapshot
+  is sent. Observations use local IDs and only selected evidence references. Exact
+  scope identifier occurrences in labels/excerpts/summaries are redacted as well.
+- Provider-facing JSON contains versions, windows, coverage, unchanged metrics,
+  observations and selected evidence with direction/label and bounded source text.
+
+## Prompt Policy and Grounding
+
+- Language zh-CN; maximum 24 evidence items; maximum 500 Unicode code points per
+  source excerpt; maximum 12,000 code points for the entire serialized evidence catalog
+  (including metadata and JSON escaping). No tokenizer or third-party dependency.
+- Stable round-robin visits support/counter/context groups. Each item's source payload
+  is conservatively limited to reserve room for other groups. Excerpts expose truncation
+  flags and omitted source counts. Skipped evidence is absent from both catalog and
+  observation references; input Pack is never modified.
+- Evidence excerpts, labels and summaries are untrusted quoted data, JSON-encoded and
+  separate from system instructions. System policy forbids following embedded instructions,
+  psychological conclusions and equating behavioral decline with relationship deterioration.
+  It requires consideration of counter/context, uncertainty and insufficient-data limits.
+- Citation validation checks actual prompt exposure and direction, not merely membership
+  in the original Pack. Every finding needs at least one support citation. Alternatives
+  may use only counter/context, including rejection of mixed support+context alternatives.
+- Unknown IDs, budget-omitted IDs, duplicate citations and canonical-ID bypass of aliases
+  fail. Local bindings must be complete, unique and reference real Pack evidence.
+
+## Validation
+
+- Starting worktree clean at D4: typecheck PASS, 15 files / 145 tests PASS, build PASS.
+- Final: typecheck PASS; 21 files / 230 tests PASS (85 new tests); build PASS.
+- Tests cover Mock behavior, exact output schema, JSON-only parser, scope privacy,
+  reversible aliases, Unicode and serialized-catalog budgets, direction balance,
+  injection encoded as data, budget-omitted citations, provider-not-called on invalid
+  context, provider failures and snapshot stability.
+- Demo JSON → in-memory SQLite → InteractionAnalysisService → ContextPack → Reasoner
+  → Mock → validated canonical citations PASS. Citations derive from actual selected
+  evidence, not hardcoded Demo IDs. No real model or network request was used.
+- No real model API. No IPC/UI integration yet. GUI validation is not required for this
+  stage. D4 contracts, deterministic logic, IPC, Renderer and package dependencies unchanged.
+
+## Known Limits and Review State
+
+- Citation checks prove existence/exposure/direction, not whether natural-language claims
+  are logically entailed. Psychological and insufficient-data language restrictions are
+  prompt instructions, not an automated semantic judge. Mock tests cannot demonstrate
+  a real model's resistance to prompt injection.
+- Evidence budget is measured in characters, not tokens, and bounds the catalog rather
+  than the whole prompt. Text may contain personal information beyond exact scope IDs;
+  this is data minimization, not comprehensive anonymization.
+- Aliases are local to one prompt. Always retain that prompt's bindings through validation;
+  only canonical IDs leave the Reasoner. JSON parsing follows JSON.parse semantics and
+  does not implement a separate duplicate-object-key detector.
+- No provider timeout, network adapter, model selection, credentials, tool calling,
+  entailment judge or D5-F UI was added. No unresolved implementation/test blocker.
+- Changes remain local for review. No commit, tag or push performed for D5-A–E.
+
+---
+
+The following D4 and D1 records are historical acceptance records.
+
+# D4-D Historical Record
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-12 |
 | Stage | D4-D Evidence Layer Freeze |
 | Status | **PASS** |
 
