@@ -9,6 +9,10 @@ import type {
   ConversationScope,
   ImportMessagesResult
 } from './message-ipc'
+import type {
+  InteractionPeriodAnalysisRequest,
+  InteractionPeriodAnalysisResult
+} from './interaction-ipc'
 /**
  * 桌面能力 API 契约。
  *
@@ -37,7 +41,10 @@ export const DESKTOP_CHANNELS = {
   listConversationScopes: 'messages:list-scopes',
   listMessages: 'messages:list',
   searchMessages: 'messages:search',
-  countMessages: 'messages:count'
+  countMessages: 'messages:count',
+
+  analyzeInteractionPeriod:
+  'interaction:analyze-period',
 } as const
 
 /**
@@ -66,4 +73,9 @@ export interface DesktopApi {
 
   countMessages:
     (query: MessageScopeQuery) => Promise<number>
+
+  analyzeInteractionPeriod:
+  (
+    request: InteractionPeriodAnalysisRequest
+  ) => Promise<InteractionPeriodAnalysisResult>
 }

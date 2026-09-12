@@ -24,6 +24,10 @@ export interface MessageRepository {
     query: MessageQuery
   ): CanonicalMessage[]
 
+  listMessagesInRange(
+    query: MessageScopeQuery
+  ): CanonicalMessage[]
+
   searchMessages(
     query: MessageSearchQuery
   ): MessageSearchResult

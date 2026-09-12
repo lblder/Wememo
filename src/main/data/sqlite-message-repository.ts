@@ -243,6 +243,58 @@ export class SqliteMessageRepository
     return rows.map(rowToMessage)
   }
 
+  listMessagesInRange(
+    query: MessageScopeQuery
+  ): CanonicalMessage[] {
+    validateMessageQuery(query)
+
+    const conditions = [
+      'account_id = ?',
+      'conversation_id = ?'
+    ]
+
+    const parameters: Array<string | number> = [
+      query.accountId,
+      query.conversationId
+    ]
+
+    if (query.startTime !== undefined) {
+      conditions.push('timestamp >= ?')
+      parameters.push(query.startTime)
+    }
+
+    if (query.endTime !== undefined) {
+      conditions.push('timestamp < ?')
+      parameters.push(query.endTime)
+    }
+
+    const rows = this.database
+      .prepare(`
+        SELECT
+          id,
+          source,
+          source_message_id,
+          account_id,
+          conversation_id,
+          sender_id,
+          sender_name,
+          direction,
+          timestamp,
+          type,
+          text
+        FROM messages
+        WHERE ${conditions.join(' AND ')}
+        ORDER BY
+          timestamp ASC,
+          id ASC
+      `)
+      .all(
+        ...parameters
+      ) as unknown as MessageRow[]
+
+    return rows.map(rowToMessage)
+  }
+
   listConversationScopes(): ConversationScope[] {
     const rows = this.database
       .prepare(`

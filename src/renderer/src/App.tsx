@@ -1,3 +1,4 @@
+import type { SemanticEvidence } from '../../shared/semantic-evidence'
 import {
   useEffect,
   useState
@@ -15,6 +16,10 @@ import type {
   MessageSearchMode
 } from '../../shared/message-query'
 
+import type {
+  InteractionPeriodAnalysisResult
+} from '../../shared/interaction-ipc'
+
 const timeFormatter =
   new Intl.DateTimeFormat('zh-CN', {
     hour: '2-digit',
@@ -22,6 +27,27 @@ const timeFormatter =
     hour12: false,
     timeZone: 'Asia/Shanghai'
   })
+
+const evidenceTimeFormatter = new Intl.DateTimeFormat('zh-CN', {
+  dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Shanghai'
+})
+
+function SemanticEvidenceList({ items }: { items: SemanticEvidence[] }): React.JSX.Element {
+  if (items.length === 0) return <p>暂无匹配的语义证据</p>
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item.id}>
+          <strong>{item.label}</strong>
+          <p>{item.category} · {item.direction === 'context' ? '背景' : item.direction === 'counter' ? '反向' : '支持'} · 规则强度 {item.confidence}</p>
+          <p>{item.senderName ?? item.senderId} · {evidenceTimeFormatter.format(item.timestamp)}</p>
+          <blockquote>{item.excerpt}</blockquote>
+          <small>messageId: {item.messageIds.join(', ')}</small>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 export function App(): React.JSX.Element {
   const platform =
@@ -51,6 +77,11 @@ export function App(): React.JSX.Element {
 
   const selectedScope =
     scopes[selectedScopeIndex]
+
+  const [analysis, setAnalysis] =
+    useState<InteractionPeriodAnalysisResult | null>(
+      null
+    )
 
   async function loadScopes(): Promise<void> {
     try {
@@ -97,6 +128,43 @@ export function App(): React.JSX.Element {
         error instanceof Error
           ? error.message
           : '读取消息失败'
+      )
+    }
+  }
+
+  async function analyzeInteraction():
+    Promise<void> {
+    if (!selectedScope) {
+      return
+    }
+
+    try {
+      setStatus(
+        '正在计算最近 7 天互动变化...'
+      )
+
+      const result =
+        await window.desktop
+          .analyzeInteractionPeriod({
+            accountId:
+              selectedScope.accountId,
+
+            conversationId:
+              selectedScope.conversationId,
+
+            days: 7
+          })
+
+      setAnalysis(result)
+
+      setStatus(
+        `分析完成，共分析 ${result.analyzedMessageCount} 条消息`
+      )
+    } catch (error) {
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : '互动分析失败'
       )
     }
   }
@@ -293,6 +361,15 @@ export function App(): React.JSX.Element {
               搜索
             </button>
 
+            <button
+              type="button"
+              onClick={() =>
+                void analyzeInteraction()
+              }
+            >
+              分析最近 7 天
+            </button>
+
             {searchMode && (
               <span>
                 {' '}
@@ -334,6 +411,287 @@ export function App(): React.JSX.Element {
             </strong>
           </div>
         </div>
+
+        {analysis && (
+          <section className="analysis-panel">
+            <h2>
+              最近 7 天 vs 前 7 天
+            </h2>
+
+            <p>
+              分析消息：
+              {analysis.analyzedMessageCount} 条
+            </p>
+
+            <section aria-label="Analysis Context">
+              <h3>Analysis Context</h3>
+              <p>Context Version: {analysis.contextPack.version}</p>
+              <p>Policy Version: {analysis.contextPack.policy.version}</p>
+              <p>
+                Evidence: Support {analysis.contextPack.evidence.metricSupport.length + analysis.contextPack.evidence.messageSupport.length + analysis.contextPack.evidence.semanticSupport.length}
+                {' · '}Counter {analysis.contextPack.evidence.metricCounter.length + analysis.contextPack.evidence.messageCounter.length + analysis.contextPack.evidence.semanticCounter.length}
+                {' · '}Context {analysis.contextPack.evidence.semanticContext.length}
+              </p>
+              <p>
+                Coverage: Previous {analysis.contextPack.coverage.previousMessageCount} messages
+                {' · '}Recent {analysis.contextPack.coverage.recentMessageCount} messages
+              </p>
+            </section>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>指标</th>
+                  <th>前7天</th>
+                  <th>最近7天</th>
+                  <th>变化</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>消息数量</td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .previous.totalMessages
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .recent.totalMessages
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .changes.totalMessages
+                        .relativeChange === null
+                        ? '无法计算'
+                        : `${(
+                            analysis.comparison
+                              .changes.totalMessages
+                              .relativeChange * 100
+                          ).toFixed(1)}%`
+                    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>聊天 Session</td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .previous.sessions
+                        .totalSessions
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .recent.sessions
+                        .totalSessions
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .changes.totalSessions
+                        .relativeChange === null
+                        ? '无法计算'
+                        : `${(
+                            analysis.comparison
+                              .changes.totalSessions
+                              .relativeChange * 100
+                          ).toFixed(1)}%`
+                    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>对方发起率</td>
+
+                  <td>
+                    {(
+                      analysis.comparison
+                        .previous.sessions
+                        .incomingStartedRatio *
+                      100
+                    ).toFixed(1)}
+                    %
+                  </td>
+
+                  <td>
+                    {(
+                      analysis.comparison
+                        .recent.sessions
+                        .incomingStartedRatio *
+                      100
+                    ).toFixed(1)}
+                    %
+                  </td>
+
+                  <td>
+                    {(
+                      analysis.comparison
+                        .changes
+                        .incomingStartedRatio
+                        .percentagePointChange *
+                      100
+                    ).toFixed(1)}
+                    个百分点
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>活跃天数</td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .previous.activeDays
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .recent.activeDays
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      analysis.comparison
+                        .changes.activeDays
+                        .absoluteChange
+                    }
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {analysis.evidenceReport.observations.map(
+              (observation) => (
+                <section
+                  key={observation.id}
+                  className="evidence-panel"
+                >
+                  <h3>
+                    {observation.title}
+                  </h3>
+
+                  <p>
+                    状态：
+                    {observation.status}
+                  </p>
+
+                  <p>
+                    {observation.summary}
+                  </p>
+
+                  <h4>支持证据</h4>
+
+                  <ul>
+                    {observation.evidence.map(
+                      (item) => (
+                        <li key={item.id}>
+                          {item.label}
+                        </li>
+                      )
+                    )}
+                  </ul>
+
+                  <h4>反向证据</h4>
+
+                  {observation.counterEvidence.length ===
+                  0 ? (
+                    <p>暂无反向指标</p>
+                  ) : (
+                    <ul>
+                      {observation.counterEvidence.map(
+                        (item) => (
+                          <li key={item.id}>
+                            {item.label}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  )}
+                  <h4>原始聊天证据</h4>
+
+                  {observation.messageEvidence.length === 0 ? (
+                    <p>暂无对应原始消息证据</p>
+                  ) : (
+                    <ul>
+                      {observation.messageEvidence.map(
+                        (evidence) => (
+                          <li key={evidence.id}>
+                            <strong>
+                              {evidence.label}
+                            </strong>
+
+                            {evidence.messages.map(
+                              (message) => (
+                                <p key={message.messageId}>
+                                  {message.senderName ??
+                                    message.senderId}
+                                  ：
+                                  {message.text}
+                                </p>
+                              )
+                            )}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  )}
+
+                  <h4>原始反向证据</h4>
+
+                  {observation.counterMessageEvidence.length ===
+                  0 ? (
+                    <p>暂无原始反向证据</p>
+                  ) : (
+                    <ul>
+                      {observation.counterMessageEvidence.map(
+                        (evidence) => (
+                          <li key={evidence.id}>
+                            <strong>
+                              {evidence.label}
+                            </strong>
+
+                            {evidence.messages.map(
+                              (message) => (
+                                <p key={message.messageId}>
+                                  {message.senderName ??
+                                    message.senderId}
+                                  ：
+                                  {message.text}
+                                </p>
+                              )
+                            )}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  )}
+                  <h4>语义证据</h4>
+                  <p>中文规则匹配；规则强度不是概率。仅提供原文背景，不改变指标判定。</p>
+                  <SemanticEvidenceList items={observation.semanticEvidence} />
+                  <h4>语义反向证据</h4>
+                  <SemanticEvidenceList items={observation.counterSemanticEvidence} />
+                </section>
+              )
+            )}
+          </section>
+        )}
 
         {messages.length === 0 ? (
           <p>

@@ -46,9 +46,20 @@ import {
   SqliteMessageRepository
 } from './data/sqlite-message-repository'
 
+import type {
+  InteractionPeriodAnalysisRequest
+} from '../shared/interaction-ipc'
+
+import {
+  InteractionAnalysisService
+} from './analytics/interaction-analysis-service'
+
 let database: DatabaseSync | undefined
 let messageRepository:
   | SqliteMessageRepository
+  | undefined
+let interactionAnalysisService:
+  | InteractionAnalysisService
   | undefined
 
 function getMessageRepository():
@@ -72,7 +83,25 @@ function initializeDatabase(): void {
 
   messageRepository =
     new SqliteMessageRepository(database)
+
+  interactionAnalysisService =
+    new InteractionAnalysisService(
+      messageRepository
+    )
 }
+
+function getInteractionAnalysisService():
+  InteractionAnalysisService {
+  if (!interactionAnalysisService) {
+    throw new Error(
+      '互动分析服务尚未初始化'
+    )
+  }
+
+  return interactionAnalysisService
+}
+
+
 
 function registerMessageIpc(): void {
   ipcMain.handle(
@@ -80,6 +109,18 @@ function registerMessageIpc(): void {
     () => {
       return getMessageRepository()
         .listConversationScopes()
+    }
+  )
+
+  ipcMain.handle(
+    DESKTOP_CHANNELS.analyzeInteractionPeriod,
+    (
+      _event,
+      request:
+        InteractionPeriodAnalysisRequest
+    ) => {
+      return getInteractionAnalysisService()
+        .analyzePeriod(request)
     }
   )
 

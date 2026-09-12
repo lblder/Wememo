@@ -15,6 +15,10 @@ import type {
   MessageSearchQuery
 } from '../shared/message-query'
 
+import type {
+  InteractionPeriodAnalysisRequest
+} from '../shared/interaction-ipc'
+
 const supportedPlatforms =
   new Set<DesktopPlatform>([
     'darwin',
@@ -58,6 +62,14 @@ const desktopApi: DesktopApi = Object.freeze({
     ipcRenderer.invoke(
       DESKTOP_CHANNELS.countMessages,
       query
+    ),
+
+  analyzeInteractionPeriod: (
+    request: InteractionPeriodAnalysisRequest
+  ) =>
+    ipcRenderer.invoke(
+      DESKTOP_CHANNELS.analyzeInteractionPeriod,
+      request
     )
 })
 

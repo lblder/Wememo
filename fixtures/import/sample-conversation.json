@@ -1,46 +1,516 @@
 {
   "format": "wememo-json-v1",
-  "accountId": "json-account-self",
+  "accountId": "demo-account-self-v2",
   "messages": [
     {
-      "sourceMessageId": "json-001",
-      "conversationId": "json-conversation-xiaolin",
-      "senderId": "xiaolin-json",
-      "senderName": "小林（JSON测试）",
+      "sourceMessageId": "demo-001",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
       "direction": "incoming",
-      "timestamp": "2026-09-09T19:00:00+08:00",
+      "timestamp": "2026-08-29T08:20:00+08:00",
       "type": "text",
-      "text": "今天有点累。"
+      "text": "早啊，今天终于周五了。"
     },
     {
-      "sourceMessageId": "json-002",
-      "conversationId": "json-conversation-xiaolin",
-      "senderId": "self-json",
-      "senderName": "我（JSON测试）",
+      "sourceMessageId": "demo-002",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
       "direction": "outgoing",
-      "timestamp": "2026-09-09T19:01:00+08:00",
+      "timestamp": "2026-08-29T08:21:00+08:00",
       "type": "text",
-      "text": "今天事情很多吗？"
+      "text": "早，感觉你这周一直都挺忙的。"
     },
     {
-      "sourceMessageId": "json-003",
-      "conversationId": "json-conversation-xiaolin",
-      "senderId": "xiaolin-json",
-      "senderName": "小林（JSON测试）",
+      "sourceMessageId": "demo-003",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
       "direction": "incoming",
-      "timestamp": "2026-09-09T19:03:00+08:00",
+      "timestamp": "2026-08-29T08:23:00+08:00",
       "type": "text",
-      "text": "下午连续开了三个会。"
+      "text": "是啊，不过今天事情不多，应该可以早点走。"
     },
     {
-      "sourceMessageId": "json-004",
-      "conversationId": "json-conversation-xiaolin",
-      "senderId": "self-json",
-      "senderName": "我（JSON测试）",
+      "sourceMessageId": "demo-004",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
       "direction": "outgoing",
-      "timestamp": "2026-09-09T19:05:00+08:00",
+      "timestamp": "2026-08-29T08:25:00+08:00",
       "type": "text",
-      "text": "那晚上早点休息。"
+      "text": "那晚上可以好好休息一下。"
+    },
+    {
+      "sourceMessageId": "demo-005",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-08-29T08:28:00+08:00",
+      "type": "text",
+      "text": "嗯，我还想下班以后去买点水果。"
+    },
+
+    {
+      "sourceMessageId": "demo-006",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-08-30T12:10:00+08:00",
+      "type": "text",
+      "text": "你中午吃什么？"
+    },
+    {
+      "sourceMessageId": "demo-007",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-08-30T12:12:00+08:00",
+      "type": "text",
+      "text": "刚准备出去吃面，你呢？"
+    },
+    {
+      "sourceMessageId": "demo-008",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-08-30T12:14:00+08:00",
+      "type": "text",
+      "text": "我点了饭，外面实在太热了。"
+    },
+    {
+      "sourceMessageId": "demo-009",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-08-30T12:17:00+08:00",
+      "type": "text",
+      "text": "那就别出去了，下午还要上班。"
+    },
+    {
+      "sourceMessageId": "demo-010",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-08-30T12:22:00+08:00",
+      "type": "text",
+      "text": "对，吃完准备眯一会儿。"
+    },
+
+    {
+      "sourceMessageId": "demo-011",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-01T09:05:00+08:00",
+      "type": "text",
+      "text": "新的一周开始了，我已经在开会了。"
+    },
+    {
+      "sourceMessageId": "demo-012",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-01T09:07:00+08:00",
+      "type": "text",
+      "text": "这么早就开会？"
+    },
+    {
+      "sourceMessageId": "demo-013",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-01T09:09:00+08:00",
+      "type": "text",
+      "text": "嗯，九点开始，不过应该不会开太久。"
+    },
+    {
+      "sourceMessageId": "demo-014",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-01T09:12:00+08:00",
+      "type": "text",
+      "text": "结束以后记得喝点水。"
+    },
+    {
+      "sourceMessageId": "demo-015",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-01T09:15:00+08:00",
+      "type": "text",
+      "text": "知道啦，你也认真工作。"
+    },
+
+    {
+      "sourceMessageId": "demo-016",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-01T21:10:00+08:00",
+      "type": "text",
+      "text": "你今天那个会后来怎么样？"
+    },
+    {
+      "sourceMessageId": "demo-017",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-01T21:12:00+08:00",
+      "type": "text",
+      "text": "还行，最后比预计早结束了一点。"
+    },
+    {
+      "sourceMessageId": "demo-018",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-01T21:15:00+08:00",
+      "type": "text",
+      "text": "那不错，今天至少没拖太晚。"
+    },
+    {
+      "sourceMessageId": "demo-019",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-01T21:18:00+08:00",
+      "type": "text",
+      "text": "对，我已经准备洗澡睡觉了。"
+    },
+
+    {
+      "sourceMessageId": "demo-020",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-02T18:40:00+08:00",
+      "type": "text",
+      "text": "我刚下班，今天好饿。"
+    },
+    {
+      "sourceMessageId": "demo-021",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-02T18:42:00+08:00",
+      "type": "text",
+      "text": "是不是中午又没好好吃？"
+    },
+    {
+      "sourceMessageId": "demo-022",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-02T18:45:00+08:00",
+      "type": "text",
+      "text": "被你发现了，中午随便吃了点。"
+    },
+    {
+      "sourceMessageId": "demo-023",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-02T18:48:00+08:00",
+      "type": "text",
+      "text": "晚上吃好一点，别总凑合。"
+    },
+    {
+      "sourceMessageId": "demo-024",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-02T18:52:00+08:00",
+      "type": "text",
+      "text": "好，我准备回去煮点东西。"
+    },
+
+    {
+      "sourceMessageId": "demo-025",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-03T22:00:00+08:00",
+      "type": "text",
+      "text": "你还没睡吧？"
+    },
+    {
+      "sourceMessageId": "demo-026",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-03T22:01:00+08:00",
+      "type": "text",
+      "text": "还没，刚把事情做完。"
+    },
+    {
+      "sourceMessageId": "demo-027",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-03T22:04:00+08:00",
+      "type": "text",
+      "text": "我刚看到一个特别好笑的视频。"
+    },
+    {
+      "sourceMessageId": "demo-028",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-03T22:06:00+08:00",
+      "type": "text",
+      "text": "发来看看。"
+    },
+    {
+      "sourceMessageId": "demo-029",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-03T22:09:00+08:00",
+      "type": "text",
+      "text": "哈哈，我就知道你也会觉得好笑。"
+    },
+    {
+      "sourceMessageId": "demo-030",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-03T22:14:00+08:00",
+      "type": "text",
+      "text": "确实有点离谱，早点睡吧。"
+    },
+
+    {
+      "sourceMessageId": "demo-031",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-05T18:30:00+08:00",
+      "type": "text",
+      "text": "今天下班了吗？"
+    },
+    {
+      "sourceMessageId": "demo-032",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-05T18:42:00+08:00",
+      "type": "text",
+      "text": "刚刚才结束，今天临时加了几个事情，所以一直没怎么看手机。"
+    },
+    {
+      "sourceMessageId": "demo-033",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-05T18:44:00+08:00",
+      "type": "text",
+      "text": "难怪，感觉你今天挺忙的。"
+    },
+    {
+      "sourceMessageId": "demo-034",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-05T18:58:00+08:00",
+      "type": "text",
+      "text": "是有点累，不过事情基本处理完了，晚上想安静休息一会儿。"
+    },
+
+    {
+      "sourceMessageId": "demo-035",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-06T22:10:00+08:00",
+      "type": "text",
+      "text": "今天过得怎么样？"
+    },
+    {
+      "sourceMessageId": "demo-036",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-06T22:24:00+08:00",
+      "type": "text",
+      "text": "白天一直在外面跑，回来以后又整理了一些工作资料，现在才终于坐下来。"
+    },
+    {
+      "sourceMessageId": "demo-037",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-06T22:26:00+08:00",
+      "type": "text",
+      "text": "最近是不是事情突然变多了？"
+    },
+    {
+      "sourceMessageId": "demo-038",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-06T22:36:00+08:00",
+      "type": "text",
+      "text": "对，这几天项目刚好卡在一起，不过忙完这一阵应该就会轻松很多。"
+    },
+
+    {
+      "sourceMessageId": "demo-039",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-08T12:00:00+08:00",
+      "type": "text",
+      "text": "刚看到你昨天发的那个餐厅，我感觉环境还挺不错的。"
+    },
+    {
+      "sourceMessageId": "demo-040",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-08T12:03:00+08:00",
+      "type": "text",
+      "text": "我也觉得，可以哪天有空去试试。"
+    },
+    {
+      "sourceMessageId": "demo-041",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-08T12:17:00+08:00",
+      "type": "text",
+      "text": "可以呀，不过这周估计不行，我最近几天的时间基本已经排满了。"
+    },
+    {
+      "sourceMessageId": "demo-042",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-08T12:26:00+08:00",
+      "type": "text",
+      "text": "没事，等你不忙的时候再说。"
+    },
+
+    {
+      "sourceMessageId": "demo-043",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-09T19:10:00+08:00",
+      "type": "text",
+      "text": "吃饭了吗？"
+    },
+    {
+      "sourceMessageId": "demo-044",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-09T19:22:00+08:00",
+      "type": "text",
+      "text": "刚吃完，今天其实心情还可以，就是连续开会以后有点没精神。"
+    },
+    {
+      "sourceMessageId": "demo-045",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-09T19:24:00+08:00",
+      "type": "text",
+      "text": "那晚上别再看工作了。"
+    },
+    {
+      "sourceMessageId": "demo-046",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-09T19:32:00+08:00",
+      "type": "text",
+      "text": "嗯，我准备看看剧就睡，最近确实应该把休息时间调整回来。"
+    },
+
+    {
+      "sourceMessageId": "demo-047",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-10T23:00:00+08:00",
+      "type": "text",
+      "text": "这么晚还没睡？"
+    },
+    {
+      "sourceMessageId": "demo-048",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-10T23:13:00+08:00",
+      "type": "text",
+      "text": "刚洗完澡，今天回家比较晚，不过总算把这周最麻烦的事情处理掉了。"
+    },
+    {
+      "sourceMessageId": "demo-049",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "self-demo",
+      "senderName": "我（测试）",
+      "direction": "outgoing",
+      "timestamp": "2026-09-10T23:15:00+08:00",
+      "type": "text",
+      "text": "那终于可以稍微轻松一点了。"
+    },
+    {
+      "sourceMessageId": "demo-050",
+      "conversationId": "demo-conversation-xiaolin-v2",
+      "senderId": "xiaolin-demo",
+      "senderName": "小林（测试）",
+      "direction": "incoming",
+      "timestamp": "2026-09-10T23:28:00+08:00",
+      "type": "text",
+      "text": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。"
     }
   ]
 }
