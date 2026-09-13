@@ -1,6 +1,6 @@
 # D5-G：单 Agent 证据追问设计
 
-状态：G1/G2 PASS，恢复标签 `d5-g-agent-runtime`；G3–G5 尚未实施。日期：2026-09-12。
+状态：G1/G2 已冻结于 `71aabdf` / `d5-g-agent-runtime`；G3 PASS，恢复标签 `d5-g-deepseek-adapter`；G4/G5 尚未实施。日期：2026-09-13。
 实现基线：`1883516` / `d5-desktop-reasoning`；D4 与 D5 Core 保持冻结。
 
 ## 目标与采用条件
@@ -187,4 +187,15 @@ G1/G2 实现位于 `src/main/evidence-agent`。Runner 接收 Main 内部的 `{co
 本地验证：新增 74 项离线测试覆盖元数据目录、按需交付、全批次预检、引用方向、
 缺少 support 时的空 findings、跨 run 重放、完整请求序列化预算、并发隔离、超时、取消和安全错误。
 Prompt injection 测试验证引文的数据位置及运行时工具边界，不代表真实模型抗注入能力已验证。
-G3 实际 Provider 协议、G4 IPC/UI 与 G5 用户追问体验仍未实施；本轮没有真实网络调用。
+以上是 G1/G2 的离线验收记录；该恢复点未包含真实网络调用。
+
+G3 现已新增独立 `DeepSeekToolCallingProvider`，仅转换请求、原生 tool_calls、tool 回执和
+final content。Runner、工具权限、预算、deliveredIds 和 citation validator 均未修改。
+适配器沿用 Main 配置，关闭 thinking，遵守 Runner 的 toolChoice 和输出上限；不自动重试或
+修补输出。新增 43 项离线测试，总计 417 项通过。
+
+合成 Demo 的真实协议验证已通过：2 次模型调用、2 次工具调用（read_metrics/read_evidence），
+交付 2 条证据，最终 1 项 finding 和 1 项 alternativeExplanation 通过结构和引用校验。
+此前较宽泛问题的 3 次手动尝试分别被结构校验拒绝 2 次、引用校验拒绝 1 次，未放宽规则。
+本次只验收协议闭环；稳定通过率和回答质量尚未建立。CLI 注入 curl 处理本地代理，
+没有接入 Electron IPC/UI。G4/G5 仍待实施；详见项目状态中的完整验收记录。

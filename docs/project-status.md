@@ -1,3 +1,65 @@
+# D5-G G3 Adapter Verification
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-12 |
+| Stage | Standalone DeepSeek native tool-calling adapter |
+| Status | **PASS — protocol milestone; model compliance remains unproven** |
+| Recovery tag | `d5-g-deepseek-adapter` |
+| Frozen runtime | `71aabdf` / `d5-g-agent-runtime` (local commit and tag; not pushed) |
+
+- Added `src/main/providers/deepseek-tool-calling-provider.ts` and its tests. G1/G2,
+  D4, D5 Core, D5-F adapter, shared contracts, IPC, Preload and Renderer are unchanged.
+  The adapter is not wired into the desktop entry point. No dependency was added.
+- Translates the existing port into DeepSeek function definitions, assistant tool_calls,
+  and tool replies paired by tool_call_id. Raw function argument strings and final text
+  pass through unchanged; no permission checks, execution, output repair or alias remapping
+  occur in the adapter. The Runner remains authoritative for the whole batch and citations.
+- Uses the existing Main-only official-endpoint configuration. HTTPS, secret header and
+  redirect refusal remain enforced. Thinking is disabled; tool_choice and output token
+  limits come from the Runner. Final-only turns request JSON-object mode; auto turns permit
+  native tool selection with the unchanged Agent system prompt specifying final JSON.
+- No provider-owned retry, timeout, history or trace. The Runner's AbortSignal reaches the
+  injected fetch transport; late responses are discarded. HTTP envelopes are bounded to
+  1 MB. Authentication/429/network failures map to safe existing port codes. Malformed,
+  truncated or refused API envelopes use DeepSeekToolProtocolError with the existing
+  provider-unavailable code, preserving the frozen port. Invalid final JSON/schema/citations
+  continue through the Runner's existing invalid-output/invalid-citation rejection paths.
+- Automated verification: 43 new offline adapter tests; 31 test files / 417 tests PASS;
+  typecheck, production build and git diff --check PASS. Tests cover request/history
+  translation, raw arguments, protocol failures, HTTP errors/no retry, response bounds,
+  cancellation/timeout, native tool round trips, atomic unknown-tool rejection, and final
+  malformed JSON, extra fields and catalog-visible-but-undelivered citations.
+
+## Real Protocol Check
+
+- Used the existing local DeepSeek credentials with `deepseek-flash` and the synthetic
+  Demo fixture only (50 analyzed messages at its fixed reference time). A temporary CLI
+  harness loaded the actual adapter and frozen Runner. It injected a curl transport to
+  use the local proxy; this verifies live HTTP protocol, not Electron transport or UI.
+  Keys were passed through stdin, never process arguments. Raw responses stayed in memory;
+  diagnostics emitted only phases, counts and fixed validation reasons. Every outgoing
+  request passed checks excluding scope values and all canonical evidence IDs.
+- Four manual runs, with no automatic retry or validator change: the first three used a
+  broad question and were rejected (two invalid-output, one invalid-citation). The second
+  was specifically diagnosed as invalid JSON; the first response was not retained for
+  detailed diagnosis. The third passed schema validation but failed citation validation.
+- The fourth used a short question requesting one support and one context evidence.
+  The model selected aliases and issued native read_metrics plus read_evidence calls;
+  the runtime returned two delivered aliases. On model call 2, one finding and one
+  alternative explanation passed strict schema/direction/delivery checks, and their IDs
+  were restored to canonical D4 evidence IDs. Model calls: 2; tool calls: 2; delivered: 2.
+- This establishes the requested protocol loop. It does not establish stable output
+  compliance or answer quality. The broader-question failures remain a G4/G5 evaluation
+  concern; no malformed or ungrounded result was accepted. Real cancellation under network
+  load and the Electron integration have not been exercised in this stage.
+
+Protocol references: [DeepSeek Tool Calls](https://api-docs.deepseek.com/guides/tool_calls/),
+[Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion/),
+and [JSON Output](https://api-docs.deepseek.com/guides/json_mode/).
+
+---
+
 # D5-G G1/G2 Acceptance
 
 | Field | Result |
@@ -500,4 +562,3 @@ D2 and later capabilities were not started: persistence, search, real WeChat acc
 - [x] 未声称已经接入真实微信数据
 
 **D1 = PASS**
-
