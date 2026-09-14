@@ -1,0 +1,313 @@
+{
+  "normal": {
+    "direct": {
+      "runs": 30,
+      "funnel": {
+        "providerPass": {
+          "passed": 30,
+          "checked": 30,
+          "runs": 30
+        },
+        "jsonPass": {
+          "passed": 27,
+          "checked": 30,
+          "runs": 30
+        },
+        "schemaPass": {
+          "passed": 11,
+          "checked": 27,
+          "runs": 30
+        },
+        "citationScopePass": {
+          "passed": 11,
+          "checked": 11,
+          "runs": 30
+        },
+        "citationDirectionPass": {
+          "passed": 7,
+          "checked": 11,
+          "runs": 30
+        },
+        "endToEndPass": {
+          "passed": 7,
+          "checked": 30,
+          "runs": 30
+        }
+      },
+      "providerAttempts": 30,
+      "providerCompleted": 30,
+      "httpStatus": {
+        "200": 30
+      },
+      "providerFailureCodes": {},
+      "primaryFailures": {
+        "alternative_support_only": 1,
+        "extra_field": 15,
+        "finding_without_support": 3,
+        "invalid_json": 3,
+        "missing_field": 1
+      },
+      "issueCounts": {
+        "alternative_contains_support": 1,
+        "alternative_support_only": 2,
+        "extra_field": 16,
+        "finding_without_support": 3,
+        "invalid_json": 3,
+        "missing_field": 1
+      },
+      "meanLatencyMs": 4886.533333333334,
+      "meanModelCalls": 1.0,
+      "meanToolCalls": 0.0
+    },
+    "agent": {
+      "runs": 30,
+      "funnel": {
+        "providerPass": {
+          "passed": 30,
+          "checked": 30,
+          "runs": 30
+        },
+        "jsonPass": {
+          "passed": 24,
+          "checked": 29,
+          "runs": 30
+        },
+        "schemaPass": {
+          "passed": 23,
+          "checked": 24,
+          "runs": 30
+        },
+        "citationScopePass": {
+          "passed": 22,
+          "checked": 23,
+          "runs": 30
+        },
+        "citationDirectionPass": {
+          "passed": 6,
+          "checked": 22,
+          "runs": 30
+        },
+        "endToEndPass": {
+          "passed": 6,
+          "checked": 30,
+          "runs": 30
+        }
+      },
+      "providerAttempts": 82,
+      "providerCompleted": 82,
+      "httpStatus": {
+        "200": 82
+      },
+      "providerFailureCodes": {},
+      "primaryFailures": {
+        "alternative_contains_support": 1,
+        "budget_exceeded": 1,
+        "extra_field": 1,
+        "finding_without_support": 15,
+        "invalid_json": 5,
+        "undelivered_citation": 1
+      },
+      "issueCounts": {
+        "alternative_contains_support": 3,
+        "alternative_support_only": 2,
+        "budget_exceeded": 1,
+        "extra_field": 1,
+        "finding_without_support": 15,
+        "invalid_json": 5,
+        "undelivered_citation": 1
+      },
+      "meanLatencyMs": 9392.833333333334,
+      "meanModelCalls": 2.7333333333333334,
+      "meanToolCalls": 2.9,
+      "acquisition": {
+        "targets-met": {
+          "runs": 22,
+          "e2e": 3,
+          "noFinal": 0,
+          "failures": {
+            "alternative_contains_support": 1,
+            "extra_field": 1,
+            "finding_without_support": 13,
+            "invalid_json": 4
+          },
+          "failurePhases": {
+            "final-citation": 14,
+            "final-schema": 5
+          },
+          "returnedFinalButFailed": 19
+        },
+        "targets-not-met": {
+          "runs": 2,
+          "e2e": 0,
+          "noFinal": 1,
+          "failures": {
+            "budget_exceeded": 1,
+            "invalid_json": 1
+          },
+          "failurePhases": {
+            "budget": 1,
+            "final-schema": 1
+          },
+          "returnedFinalButFailed": 1
+        },
+        "not-applicable-or-unavailable": {
+          "runs": 6,
+          "e2e": 3,
+          "noFinal": 0,
+          "failures": {
+            "finding_without_support": 2,
+            "undelivered_citation": 1
+          },
+          "failurePhases": {
+            "final-citation": 3
+          },
+          "returnedFinalButFailed": 3
+        }
+      }
+    }
+  },
+  "stress": {
+    "direct": {
+      "runs": 10,
+      "funnel": {
+        "providerPass": {
+          "passed": 10,
+          "checked": 10,
+          "runs": 10
+        },
+        "jsonPass": {
+          "passed": 9,
+          "checked": 10,
+          "runs": 10
+        },
+        "schemaPass": {
+          "passed": 8,
+          "checked": 9,
+          "runs": 10
+        },
+        "citationScopePass": {
+          "passed": 8,
+          "checked": 8,
+          "runs": 10
+        },
+        "citationDirectionPass": {
+          "passed": 5,
+          "checked": 8,
+          "runs": 10
+        },
+        "endToEndPass": {
+          "passed": 5,
+          "checked": 10,
+          "runs": 10
+        }
+      },
+      "providerAttempts": 10,
+      "providerCompleted": 10,
+      "httpStatus": {
+        "200": 10
+      },
+      "providerFailureCodes": {},
+      "primaryFailures": {
+        "extra_field": 1,
+        "finding_without_support": 3,
+        "invalid_json": 1
+      },
+      "issueCounts": {
+        "extra_field": 1,
+        "finding_without_support": 3,
+        "invalid_json": 1
+      },
+      "meanLatencyMs": 4679.8,
+      "meanModelCalls": 1.0,
+      "meanToolCalls": 0.0
+    },
+    "agent": {
+      "runs": 10,
+      "funnel": {
+        "providerPass": {
+          "passed": 10,
+          "checked": 10,
+          "runs": 10
+        },
+        "jsonPass": {
+          "passed": 10,
+          "checked": 10,
+          "runs": 10
+        },
+        "schemaPass": {
+          "passed": 8,
+          "checked": 10,
+          "runs": 10
+        },
+        "citationScopePass": {
+          "passed": 8,
+          "checked": 8,
+          "runs": 10
+        },
+        "citationDirectionPass": {
+          "passed": 3,
+          "checked": 8,
+          "runs": 10
+        },
+        "endToEndPass": {
+          "passed": 3,
+          "checked": 10,
+          "runs": 10
+        }
+      },
+      "providerAttempts": 22,
+      "providerCompleted": 22,
+      "httpStatus": {
+        "200": 22
+      },
+      "providerFailureCodes": {},
+      "primaryFailures": {
+        "extra_field": 1,
+        "finding_without_support": 5,
+        "invalid_schema": 1
+      },
+      "issueCounts": {
+        "alternative_contains_support": 1,
+        "extra_field": 1,
+        "finding_without_support": 5,
+        "invalid_schema": 1
+      },
+      "meanLatencyMs": 7859.0,
+      "meanModelCalls": 2.2,
+      "meanToolCalls": 2.0,
+      "acquisition": {
+        "targets-met": {
+          "runs": 7,
+          "e2e": 0,
+          "noFinal": 0,
+          "failures": {
+            "extra_field": 1,
+            "finding_without_support": 5,
+            "invalid_schema": 1
+          },
+          "failurePhases": {
+            "final-citation": 5,
+            "final-schema": 2
+          },
+          "returnedFinalButFailed": 7
+        },
+        "targets-not-met": {
+          "runs": 1,
+          "e2e": 1,
+          "noFinal": 0,
+          "failures": {},
+          "failurePhases": {},
+          "returnedFinalButFailed": 0
+        },
+        "not-applicable-or-unavailable": {
+          "runs": 2,
+          "e2e": 2,
+          "noFinal": 0,
+          "failures": {},
+          "failurePhases": {},
+          "returnedFinalButFailed": 0
+        }
+      }
+    }
+  }
+}

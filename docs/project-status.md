@@ -1,3 +1,31 @@
+# D6 V0: Complete Real-Model Baseline
+
+- **80/80 runs complete**: Normal Direct 30 / Agent 30; Stress Direct 10 / Agent 10.
+  Canary 8 + remaining 72 belong to one unchanged batch. No retry, repair or Prompt edits.
+- **144/144 Provider calls returned successfully, all HTTP 200**. All checkpoint, source,
+  external-controller and Git HEAD checks passed. No infrastructure stop was triggered.
+- Normal E2E: Direct **7/30**, Agent **6/30**. Stress E2E: Direct **5/10**, Agent **3/10**.
+- Direct/Normal had 19 structural failures (15 primary extra_field). Agent/Normal had
+  17 citation failures (15 primary finding_without_support), 6 structural failures and
+  1 budget rejection. Primary failures and overlapping issues are reported separately.
+- Agent met predeclared retrieval targets in 22/24 applicable Normal and 7/8 Stress runs.
+  After targets were met, final answers still failed in 19/22 Normal and 7/7 Stress runs.
+  Retrieval proxies are not human quality scores and do not override runtime acceptance.
+- Original repository src/scripts/fixtures remain byte-identical to P0. An archived external
+  launcher applies the user's revised canary infrastructure gate to the same evaluation core;
+  its code, thresholds and hashes were fixed before live calls. Model/Prompt/Validator/data/
+  budgets/order were held constant. All single-run failures were retained.
+- Before the new batch, GitHub main was pushed and verified at `5f0ab17`, with
+  `d6-provider-diagnostics-v1` at `b3c327b`. No force or other branch/tag push occurred.
+- 21 valid synthetic answers are eligible for human review; **0 scored**. No V1/V2/V3 runs.
+  Previous preflight and P0 results remain unchanged and excluded from the baseline.
+
+See [complete Normal/Stress funnels and failure distributions](evaluation/reliability/2026-09-14-live-v0-baseline/summary.md),
+[80 raw records](evaluation/reliability/2026-09-14-live-v0-baseline/runs.jsonl), and
+[integrity audit](evaluation/reliability/2026-09-14-live-v0-baseline/integrity-audit.json).
+
+---
+
 # D6-P0: Provider Transport Diagnostics
 
 - Added safe per-call diagnostics for HTTP status, DNS/connection failures, timeouts,

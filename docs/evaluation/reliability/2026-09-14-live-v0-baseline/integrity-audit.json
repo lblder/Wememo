@@ -1,0 +1,29 @@
+{
+  "rawRunCount": 80,
+  "uniqueRunIds": 80,
+  "uniqueScheduledTuples": 80,
+  "providerCalls": 144,
+  "providerReturns": 144,
+  "httpStatusDistribution": {
+    "200": 144
+  },
+  "oldPreflightUnchanged": true,
+  "p0ResultsUnchanged": true,
+  "productionSourcesUnchangedFromP0": true,
+  "canaryRecordsEqualFirstEight": true,
+  "canaryApproved": true,
+  "humanScoresAssigned": 0,
+  "eligibleHumanReviewItems": 21,
+  "externalControllerDryRun": {
+    "completedRuns": 80,
+    "realApiCalls": 0,
+    "finalChecks": {
+      "sourceHashesMatch": true,
+      "operatorControlUnchanged": true,
+      "gitHeadUnchanged": true,
+      "persistedExactly": true
+    }
+  },
+  "remoteMainBeforeRun": "5f0ab178826747fed7ad13215630ac993d2f74ff",
+  "remoteP0Tag": "b3c327b8175af955523d32cda129719bc8b445c1"
+}

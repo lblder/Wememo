@@ -1,0 +1,541 @@
+{
+  "version": "wememo-v0-canary-v1",
+  "checks": {
+    "operatorControlUnchanged": true,
+    "infrastructureAcceptable": true,
+    "diagnosticClassificationValid": true,
+    "completedEight": true,
+    "normalSix": true,
+    "stressTwo": true,
+    "persistedExactly": true,
+    "failuresClassified": true,
+    "sourceHashesMatch": true,
+    "gitHeadUnchanged": true
+  },
+  "infraPass": true,
+  "records": [
+    {
+      "runId": "a6bcc048-15d4-4f55-99d9-9e2fafdf3828",
+      "questionId": "N01",
+      "set": "normal",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "direct",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 1,
+      "jsonPass": true,
+      "schemaPass": false,
+      "citationScopePass": null,
+      "citationDirectionPass": null,
+      "endToEndPass": false,
+      "failureCode": "extra_field",
+      "failureCodes": [
+        "extra_field"
+      ],
+      "runtimeFailureCode": "invalid-output",
+      "modelCalls": 1,
+      "runtimeModelCalls": 1,
+      "toolCalls": 0,
+      "toolProposals": 0,
+      "evidenceReadCalls": 0,
+      "catalogCount": 22,
+      "deliveredCount": 22,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        },
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": "final-schema",
+      "latencyMs": 5177,
+      "promptHashes": [
+        "6c532ad322870bc45a2cb6c4420a96d7e210cd28ded74cb0af1385a5fcaa698b"
+      ],
+      "reviewId": null,
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 5172,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "3748d810-4c28-4698-a4c9-bb0ccd31d1fa",
+      "questionId": "N01",
+      "set": "normal",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "agent",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 3,
+      "jsonPass": true,
+      "schemaPass": true,
+      "citationScopePass": true,
+      "citationDirectionPass": false,
+      "endToEndPass": false,
+      "failureCode": "finding_without_support",
+      "failureCodes": [
+        "finding_without_support"
+      ],
+      "runtimeFailureCode": "invalid-citation",
+      "modelCalls": 3,
+      "runtimeModelCalls": 3,
+      "toolCalls": 3,
+      "toolProposals": 3,
+      "evidenceReadCalls": 2,
+      "catalogCount": 22,
+      "deliveredCount": 12,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        },
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": "final-citation",
+      "latencyMs": 9232,
+      "promptHashes": [
+        "580eeb7653869deb335fcdf6410ee1dd754a708c9f829d5d9474fb0beca0261e",
+        "305b07f1b86c4078767b5ae05f35a1157866e7ed8454e524bc8c2546d4dca746",
+        "677e46f79fc6eac8cc0096d777a59abdee04e904c13d6b5188375f644e3204dd"
+      ],
+      "reviewId": null,
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 2753,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 1507,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 4960,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "db9c96bd-aa2c-4a63-a398-7e509953a709",
+      "questionId": "N02",
+      "set": "normal",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "agent",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 3,
+      "jsonPass": true,
+      "schemaPass": true,
+      "citationScopePass": true,
+      "citationDirectionPass": false,
+      "endToEndPass": false,
+      "failureCode": "finding_without_support",
+      "failureCodes": [
+        "finding_without_support"
+      ],
+      "runtimeFailureCode": "invalid-citation",
+      "modelCalls": 3,
+      "runtimeModelCalls": 3,
+      "toolCalls": 3,
+      "toolProposals": 3,
+      "evidenceReadCalls": 2,
+      "catalogCount": 22,
+      "deliveredCount": 12,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        },
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": "final-citation",
+      "latencyMs": 9189,
+      "promptHashes": [
+        "d185d8b443c553a2a6a588f4d31c8a084cc21a2a3e53de04fb689f11787d74e9",
+        "4992d63340af7c97613fa54c76017e5ea4f8f72c59d3c53fd3b439275e92deb5",
+        "54508df0272001fcd9e39d4f7e403e2fdb36f0ca7f73824ef1039d3d9ed75d1c"
+      ],
+      "reviewId": null,
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 1456,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 1928,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 5795,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "43248a27-b7d4-4afc-b5c2-6f159b45e8ae",
+      "questionId": "N02",
+      "set": "normal",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "direct",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 1,
+      "jsonPass": true,
+      "schemaPass": true,
+      "citationScopePass": true,
+      "citationDirectionPass": true,
+      "endToEndPass": true,
+      "failureCode": null,
+      "failureCodes": [],
+      "runtimeFailureCode": null,
+      "modelCalls": 1,
+      "runtimeModelCalls": 1,
+      "toolCalls": 0,
+      "toolProposals": 0,
+      "evidenceReadCalls": 0,
+      "catalogCount": 22,
+      "deliveredCount": 22,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        },
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": null,
+      "latencyMs": 4689,
+      "promptHashes": [
+        "d36d85791fb41793da17ee2f441cbf588e621f7dd7a2e16d648e940b11023ead"
+      ],
+      "reviewId": "52203725-39ac-4a7b-b741-8e8841b3ec15",
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 4684,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "5cce72ed-eaae-4fb7-8ee1-8024e4cb2e03",
+      "questionId": "N03",
+      "set": "normal",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "direct",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 1,
+      "jsonPass": true,
+      "schemaPass": false,
+      "citationScopePass": null,
+      "citationDirectionPass": null,
+      "endToEndPass": false,
+      "failureCode": "extra_field",
+      "failureCodes": [
+        "extra_field"
+      ],
+      "runtimeFailureCode": "invalid-output",
+      "modelCalls": 1,
+      "runtimeModelCalls": 1,
+      "toolCalls": 0,
+      "toolProposals": 0,
+      "evidenceReadCalls": 0,
+      "catalogCount": 22,
+      "deliveredCount": 22,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": "final-schema",
+      "latencyMs": 5144,
+      "promptHashes": [
+        "cc4f564944df402f8c940eed3fa4e59266a809d7ac56cf9476bedf27ed451151"
+      ],
+      "reviewId": null,
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 5140,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "140d138b-1c63-4e87-9d9a-f088c1959d25",
+      "questionId": "N03",
+      "set": "normal",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "agent",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 3,
+      "jsonPass": false,
+      "schemaPass": null,
+      "citationScopePass": null,
+      "citationDirectionPass": null,
+      "endToEndPass": false,
+      "failureCode": "invalid_json",
+      "failureCodes": [
+        "invalid_json"
+      ],
+      "runtimeFailureCode": "invalid-output",
+      "modelCalls": 3,
+      "runtimeModelCalls": 3,
+      "toolCalls": 4,
+      "toolProposals": 4,
+      "evidenceReadCalls": 3,
+      "catalogCount": 22,
+      "deliveredCount": 18,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": "final-schema",
+      "latencyMs": 6300,
+      "promptHashes": [
+        "9bd4a5286bdef57f9eab4b4de82ae1a6ae117ebeb7afb6191a198469726b4846",
+        "a21d5af378b010cfe45f294522d399a9a802affe82a451a8b52bbf2e81211a72",
+        "df8886af1d66ea5aba68709b6411e3256ba5b83dc8a879c3427696602a8f527f"
+      ],
+      "reviewId": null,
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 1710,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 2125,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 2454,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "9c7d916f-2003-42da-9f02-512caa6189aa",
+      "questionId": "S01",
+      "set": "stress",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "direct",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 1,
+      "jsonPass": true,
+      "schemaPass": true,
+      "citationScopePass": true,
+      "citationDirectionPass": true,
+      "endToEndPass": true,
+      "failureCode": null,
+      "failureCodes": [],
+      "runtimeFailureCode": null,
+      "modelCalls": 1,
+      "runtimeModelCalls": 1,
+      "toolCalls": 0,
+      "toolProposals": 0,
+      "evidenceReadCalls": 0,
+      "catalogCount": 22,
+      "deliveredCount": 22,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": null,
+      "latencyMs": 4222,
+      "promptHashes": [
+        "6c938349af5912378b18450daa63b8c117f4369fb60a4549895fd11c8b7d9f84"
+      ],
+      "reviewId": "cd83093a-b573-42e9-9691-c8d975c5b530",
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 4217,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    },
+    {
+      "runId": "d4374a7b-fe43-414e-994b-6139858d88fd",
+      "questionId": "S01",
+      "set": "stress",
+      "fixture": "demo",
+      "repeatIndex": 1,
+      "mode": "agent",
+      "providerId": "deepseek",
+      "modelId": "deepseek-flash",
+      "promptVariant": "V0",
+      "providerPass": true,
+      "providerResponses": 3,
+      "jsonPass": true,
+      "schemaPass": true,
+      "citationScopePass": true,
+      "citationDirectionPass": false,
+      "endToEndPass": false,
+      "failureCode": "finding_without_support",
+      "failureCodes": [
+        "finding_without_support",
+        "alternative_contains_support"
+      ],
+      "runtimeFailureCode": "invalid-citation",
+      "modelCalls": 3,
+      "runtimeModelCalls": 3,
+      "toolCalls": 4,
+      "toolProposals": 4,
+      "evidenceReadCalls": 3,
+      "catalogCount": 22,
+      "deliveredCount": 18,
+      "readTargets": [
+        {
+          "available": true,
+          "delivered": true
+        }
+      ],
+      "evidenceReadPass": true,
+      "failurePhase": "final-citation",
+      "latencyMs": 10180,
+      "promptHashes": [
+        "cad8daeb8a254b973a1d260ff5a7789af1b4610a3780ddf556d5315eb50c6d9f",
+        "9a6c587cace66a4eeda7f95c31cb81e8d3879855c811572523bb909c7ad4624b",
+        "cfa2c086f66e8b607b1f7736d026e56bcdbc839ad1175b8c09b38a9807b766ff"
+      ],
+      "reviewId": null,
+      "providerDiagnostics": [
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 1651,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 1952,
+          "httpStatus": 200,
+          "outcome": "success"
+        },
+        {
+          "providerId": "deepseek-tool-calling",
+          "modelId": "deepseek-flash",
+          "phase": "decoding-response",
+          "durationMs": 6569,
+          "httpStatus": 200,
+          "outcome": "success"
+        }
+      ]
+    }
+  ],
+  "qualityScored": false,
+  "assessment": {
+    "stop": false,
+    "classificationValid": true,
+    "hardHttpCount": 0,
+    "unexplainedCount": 0,
+    "providerFailureCount": 0,
+    "maxConsecutiveProviderFailures": 0,
+    "recentFailedRuns": 0,
+    "persistentInfrastructureFailure": false,
+    "diagnosticCodes": [],
+    "reason": null
+  },
+  "providerReturnedEveryTurn": true
+}
