@@ -11,10 +11,12 @@ import { ReasoningOutputParseError } from '../reasoning/reasoning-output-parser'
 import { EvidenceCitationValidationError } from '../reasoning/evidence-citation-validator'
 import { ProviderRequestError } from '../providers/provider-request-error'
 import { describeExactKeyFailure } from './reasoning-output-diagnostic'
+import { diagnoseReasoningFailure } from '../diagnostics/reasoning-failure-diagnostic'
+import type { ReasoningDiagnostic } from '../../shared/reasoning-diagnostic'
 
 const ERROR_MESSAGES: Record<ReasoningErrorCode, string> = {
   'invalid-request': '请求格式不正确，请重新选择会话。',
-  'not-configured': '尚未配置模型密钥，请在 Main 启动环境中配置后重启应用。',
+  'not-configured': '尚未配置模型密钥，请打开模型设置完成配置。',
   busy: '已有解释正在生成，请等待完成。',
   'no-data': '所选时期没有消息，请选择有数据的会话。',
   authentication: '模型认证失败，请检查密钥及账户状态。',
@@ -40,9 +42,11 @@ export class ReasoningService {
   getStatus(): ReasoningProviderStatus {
     return { ...this.providerInfo }
   }
+  get isBusy(): boolean { return this.busy }
 
   async generate(value: unknown): Promise<GenerateReasoningResponse> {
-    const failure = (code: ReasoningErrorCode, detail?: string): GenerateReasoningResponse => ({ ok: false, error: { code, message: ERROR_MESSAGES[code] + (detail ? `（${detail}）` : '') } })
+    let diagnostic: ReasoningDiagnostic | undefined
+    const failure = (code: ReasoningErrorCode, detail?: string): GenerateReasoningResponse => ({ ok: false, error: { code, message: ERROR_MESSAGES[code] + (detail ? `（${detail}）` : ''), ...(diagnostic ? { diagnostic } : {}) } })
     let request
     try { request = validateGenerateReasoningRequest(value) } catch { return failure('invalid-request') }
     if (this.busy) return failure('busy')
@@ -66,6 +70,7 @@ export class ReasoningService {
         value: { result, contextPack, providerId: this.providerInfo.providerId, modelId: this.providerInfo.modelId }
       }
     } catch (error) {
+      diagnostic = diagnoseReasoningFailure(error, receivedText)
       if (error instanceof ReasoningRequestValidationError) return failure('invalid-request')
       if (error instanceof AnalysisContextValidationError) return failure('invalid-context')
       if (error instanceof ReasoningOutputParseError) return failure('invalid-output', 'JSON 解析失败：需要单个 JSON 对象，不能包含代码围栏或额外文字')
@@ -78,6 +83,7 @@ export class ReasoningService {
       if (error instanceof EvidenceCitationValidationError) return failure('invalid-citation')
       if (error instanceof LLMProviderError) {
         if (error.cause instanceof ProviderRequestError && error.cause.code === 'invalid-output') {
+          diagnostic = { kind: 'invalid-provider-response' }
           return failure('invalid-output', '接口响应校验失败：响应为空、截断、包含工具调用或格式异常')
         }
         return failure(error.cause instanceof ProviderRequestError ? error.cause.code : 'provider-unavailable')

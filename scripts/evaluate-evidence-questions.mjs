@@ -61,6 +61,8 @@ try {
     'src/main/evidence-agent/agent-tools.ts', 'src/main/evidence-agent/agent-evidence-projection.ts',
     'src/main/providers/deepseek-provider.ts', 'src/main/providers/deepseek-tool-calling-provider.ts',
     'src/main/providers/deepseek-output-instructions.ts', 'src/main/reasoning/reasoning-prompt-builder.ts',
+    'src/main/diagnostics/reasoning-failure-diagnostic.ts', 'src/main/diagnostics/reasoning-output-diagnostic.ts',
+    'src/shared/reasoning-diagnostic.ts',
     'src/main/reasoning/evidence-citation-validator.ts', 'src/shared/interaction-reasoning-validation.ts'
   ]
   const sourceHashes = Object.fromEntries(await Promise.all(sourcePaths.map(async path => [path, createHash('sha256').update(await readFile(resolve(root, path))).digest('hex')])))

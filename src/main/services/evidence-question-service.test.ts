@@ -86,6 +86,12 @@ describe('EvidenceQuestionService', () => {
     expect(await pending).toMatchObject({ error: { code: 'timeout' } })
     expect(vi.getTimerCount()).toBe(0)
   })
+  it('returns safe citation diagnostics through the service response', async () => {
+    const { service } = setup([finalText(['PRIVATE_NOT_DELIVERED'])])
+    const response = await service.ask(request, 1)
+    expect(response).toMatchObject({ error: { code: 'invalid-citation', diagnostic: { kind: 'citation-not-delivered' } } })
+    expect(JSON.stringify(response)).not.toContain('PRIVATE')
+  })
   it('covers SQLite → analysis → frozen Agent → canonical citations', async () => {
     const database = openDatabase(':memory:')
     try {

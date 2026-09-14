@@ -1,4 +1,6 @@
 import type { AnalysisContextPack } from '../../shared/analysis-context'
+import type { ReasoningDiagnostic } from '../../shared/reasoning-diagnostic'
+import { diagnoseReasoningFailure } from '../diagnostics/reasoning-failure-diagnostic'
 import { AnalysisContextValidationError } from '../../shared/analysis-context-validation'
 import type { InteractionReasoningResult } from '../../shared/interaction-reasoning'
 import { InteractionReasoningValidationError } from '../../shared/interaction-reasoning-validation'
@@ -31,7 +33,7 @@ export interface AgentRunMetadata {
 }
 export type AgentRunResponse =
   | { ok: true; value: { result: InteractionReasoningResult; contextPack: AnalysisContextPack }; metadata: AgentRunMetadata }
-  | { ok: false; error: { code: AgentErrorCode; message: string }; metadata: AgentRunMetadata }
+  | { ok: false; error: { code: AgentErrorCode; message: string; diagnostic?: ReasoningDiagnostic }; metadata: AgentRunMetadata }
 
 /** All state belongs to one invocation; concurrent runs share no aliases, counters or history. */
 export class BoundedAgentRunner {
@@ -45,6 +47,7 @@ export class BoundedAgentRunner {
     if (options.signal?.aborted) cancel()
     const runTimeout = setTimeout(() => controller.abort(new AgentRunError('timeout')), POLICY.runTimeoutMs)
     let runId: string | undefined
+    let finalText: string | undefined
     let modelCalls = 0
     let toolCalls = 0
     const delivered = new Set<string>()
@@ -86,6 +89,7 @@ export class BoundedAgentRunner {
         const response = validateToolCallingResponse(raw)
         event('model-complete')
         if (response.type === 'final') {
+          finalText = response.text
           const result = parseInteractionReasoningOutput(response.text)
           const bindings = projection.aliasBindings.filter(binding => delivered.has(binding.promptId))
           const validated = validateReasoningCitations(result, projection.snapshot, [...delivered], bindings)
@@ -120,8 +124,10 @@ export class BoundedAgentRunner {
         : error instanceof InteractionReasoningValidationError || error instanceof ReasoningOutputParseError ? 'invalid-output'
         : error instanceof EvidenceCitationValidationError ? 'invalid-citation' : 'internal'
       event('failed', { code })
-      return freezeJson({ ok: false, error: agentFailure(code), metadata: metadata() })
+      const diagnostic = diagnoseReasoningFailure(error, finalText)
+      return freezeJson({ ok: false, error: { ...agentFailure(code), ...(diagnostic ? { diagnostic } : {}) }, metadata: metadata() })
     } finally {
+      finalText = undefined
       clearTimeout(runTimeout)
       options.signal?.removeEventListener('abort', cancel)
     }

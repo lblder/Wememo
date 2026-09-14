@@ -15,6 +15,7 @@ export class EvidenceQuestionService {
   ) {}
 
   getStatus(): ReasoningProviderStatus { return { ...this.status } }
+  get isBusy(): boolean { return Boolean(this.active) }
   cancel(owner: number): { cancelled: boolean } {
     if (!this.active || this.active.owner !== owner) return { cancelled: false }
     this.active.controller.abort()
@@ -36,7 +37,7 @@ export class EvidenceQuestionService {
       const stats = { modelCalls: response.metadata.modelCalls, toolCalls: response.metadata.toolCalls,
         deliveredCount: response.metadata.deliveredIds.length, elapsedMs: Math.max(0, performance.now() - started) }
       if (active.controller.signal.aborted) return { ok: false, error: { code: 'cancelled' }, stats }
-      if (!response.ok) return { ok: false, error: { code: response.error.code }, stats }
+      if (!response.ok) return { ok: false, error: { code: response.error.code, ...(response.error.diagnostic ? { diagnostic: response.error.diagnostic } : {}) }, stats }
       return { ok: true, value: { ...response.value, providerId: this.status.providerId, modelId: this.status.modelId }, stats }
     } catch (error) {
       return { ok: false, error: { code: error instanceof AnalysisContextValidationError ? 'invalid-context' : 'internal' } }

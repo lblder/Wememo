@@ -6,7 +6,7 @@
 ```zsh
 pnpm eval:evidence --mock
 
-# CLI 使用环境配置，密钥不写入命令参数。
+# CLI 仍使用环境配置；不读取桌面 safeStorage，密钥不写入命令参数。
 source "$HOME/.config/wememo/deepseek.env"
 pnpm eval:evidence --live
 
@@ -22,12 +22,14 @@ pnpm eval:evidence --live --proxy http://127.0.0.1:7897
 ## 比较方法
 
 - 五类问题各 3 个：指标、替代解释、反向证据、数据不足、越界问题。
-  当前报告版本为 `wememo-evidence-question-eval-v1`，15 个问题文本保持不变并保存在报告中。
+  当前报告版本为 `wememo-evidence-question-eval-v2`，15 个问题文本保持不变并保存在报告中。
+  v2 新增语法、字段与安全诊断指标；历史 v1 报告保持原样，不回填无法观察的指标。
 - 固定参考时间为 `2026-09-11T12:00:00+08:00`。每对问题使用同一份不可变分析快照，
   避免日期推进、数据变化影响比较。报告含 fixture SHA-256、覆盖计数和关键源文件 SHA-256。
 - Direct QA 使用冻结的 `InteractionReasoner` 和 D5-F `DeepSeekProvider`。
   评估专用包装把同一个问题加入 user JSON，并声明问题是不可信数据；不改变桌面 D5-F。
 - Agent 使用保留原有决策规则的 `BoundedAgentRunner` 和 G3 Adapter，保留 3 次模型、4 次工具等全部预算。
+  2026-09-14 的 Runner 改动只增加失败诊断，不修改工具权限、交付范围、验证规则或重试策略。
   两条路径的提示词、证据交付方式和预算来自各自现有实现，并非同一 Prompt 的随机实验。
 - 每个问题每条路径仅运行一次。顺序交替，逐条执行，不并发、不筛选问题或剔除失败。
   真实模型非确定，随机 alias 也不同，不能从一次小样本推断稳定通过率。
@@ -35,13 +37,16 @@ pnpm eval:evidence --live --proxy http://127.0.0.1:7897
 ## 指标定义
 
 每条记录包含 `caseId/category/path`、Provider 返回数、模型/工具调用数、
-`finalResponse/schemaPass/citationPass`、耗时、最终有效性与固定错误代码。
+`finalResponse/jsonPass/fieldsPass/schemaPass/citationPass`、耗时、最终有效性与固定错误代码。
+`diagnostic` 只包含固定分类及安全的契约字段位置，不记录模型原文或动态属性名。
 没有执行的校验用 `null`，不是 `false`。
 
 | 指标 | 分子 / 分母 |
 |---|---|
 | Provider response | Provider 正常返回的 turn 数 / 实际模型调用数，包含工具提案和最终文本；不是原始 HTTP 可达率 |
 | Runs with provider response | 至少得到一次 Provider 返回的运行数 / 运行数 |
+| JSON syntax | 严格 JSON 解析通过次数 / 实际尝试解析次数 |
+| Fields | 精确字段校验通过次数 / JSON 解析通过并检查字段的次数 |
 | Structured-output | 最终文本通过严格 JSON/字段校验的次数 / 收到最终文本并尝试结构校验的次数 |
 | Citation | 最终引用校验通过次数 / 实际进入引用校验的次数 |
 | End-to-end valid | 完整链路有效次数 / 全部运行数，包含预算、超时及无数据等本地退出 |
@@ -49,6 +54,8 @@ pnpm eval:evidence --live --proxy http://127.0.0.1:7897
 分母为 0 时比例为 `null`。预算超限可能发生在取得最终文本之前，此时结构和引用均未执行。
 模型/工具调用数及平均耗时用于比较运行开销；当前未采集实际 token 或账单，不能据此计算金额。
 所有失败分类保留，不把 `invalid-output` 与 `invalid-citation` 合并。
+`diagnosticFailures` 进一步区分非法 JSON、字段结构、未交付引用、finding 缺少 support、
+alternative 误用 support 与本地引用映射问题。合并指标 `schemaPass` 保留原来的严格 JSON＋字段含义。
 
 报告不保存原始模型响应、证据正文、scope、canonical ID、API key、headers 或本地 alias binding。
 输出通过校验也不等于语义正确：`qualityScoring: not-performed` 明确表示未评估相关性、

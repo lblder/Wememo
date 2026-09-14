@@ -6,6 +6,25 @@
   text-rendering: optimizeLegibility;
 }
 
+.model-settings-panel {
+  padding: 16px 28px;
+  border-bottom: 1px solid #d9dfdc;
+  background: #fff;
+}
+.model-settings-panel > summary { cursor: pointer; font-weight: 650; color: #0d6a3a; }
+.model-settings-form fieldset { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; border: 0; padding: 0; margin: 16px 0; }
+.model-settings-form label { display: grid; gap: 6px; min-width: 0; font-size: 14px; }
+.model-settings-form label:last-of-type { grid-column: 1 / -1; }
+.model-settings-form input, .model-settings-form select { width: 100%; min-width: 0; padding: 9px 10px; border: 1px solid #b9c7c0; border-radius: 7px; background: #fff; }
+.model-settings-form button { justify-self: start; padding: 10px 16px; border: 0; border-radius: 7px; background: #0d6a3a; color: #fff; cursor: pointer; }
+.model-settings-form :disabled { opacity: .65; cursor: default; }
+.model-settings-form :focus-visible { outline: 2px solid #12864c; outline-offset: 3px; }
+.reasoning-failure-detail { border-left: 3px solid #bb7c2d; padding: 1px 12px; margin: 12px 0; background: #fff9ec; overflow-wrap: anywhere; }
+@media (max-width: 580px) {
+  .model-settings-panel { padding: 16px; }
+  .model-settings-form fieldset { grid-template-columns: 1fr; }
+}
+
 * {
   box-sizing: border-box;
 }

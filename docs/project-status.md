@@ -1,3 +1,54 @@
+# Model Settings and Failure Diagnostics
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-14 |
+| Stage | TraceMemo-inspired configuration separation and failure observability |
+| Status | **Implementation, automated checks and isolated desktop smoke PASS** |
+| Verification | **42 test files / 543 tests PASS**, typecheck PASS, production build PASS |
+
+- Added an application-level “模型设置” panel for the official DeepSeek base URL,
+  model ID and write-only API key. Main owns configuration and injects providers into
+  both existing reasoning services. Saving applies immediately without a model request.
+  Saved configuration takes precedence over startup environment configuration; explicit
+  blank-key saving can migrate an active environment key. Existing environment files are
+  not modified. Unreadable saved configuration fails closed and can be replaced with an
+  explicitly supplied new key.
+- Main separates public metadata from randomly named encrypted credential files in the
+  Electron user-data directory. Asynchronous OS safeStorage encryption, private file
+  permissions, bounded reads and validated paths are used. New ciphertext is staged before
+  the metadata pointer is switched; a failed switch preserves the old configuration.
+  Unavailable secure storage does not fall back to plaintext. Saving and model tasks are
+  mutually exclusive. Renderer receives safe status only; no key-reading IPC was added.
+- Added shared safe diagnostics for JSON syntax, exact fields, undelivered citations,
+  citation direction and local binding failures. Both desktop flows explain the rejection
+  stage without displaying the rejected answer. Diagnostics carry fixed labels and known
+  schema field names, never raw model output, credentials, scope or canonical evidence IDs.
+- Evaluation v2 records JSON syntax and field validation separately, retaining combined
+  schema results and explicit citation denominators. Unattempted checks remain null;
+  historical v1 reports and the 15 questions are unchanged. The new mock comparison passed
+  **30/30 planned runs**. This validates the harness, not real-model reliability.
+- The actual Electron application was exercised with an isolated user-data directory,
+  a synthetic key and synthetic Demo messages. Renderer save, cleared password input,
+  encrypted disk files, busy-save rejection, JSON/citation failure displays and hidden
+  rejected output passed. A second process loaded and decrypted the saved settings.
+  Network transport was mocked: **2 simulated provider requests, 0 real API requests**.
+  Subsequent storage edge-case refinements passed the final automated suite above.
+- D4 analytics, D5 reasoning contracts/validators, both DeepSeek adapters and Agent tools,
+  prompts, selection and budgets remain unchanged. The Runner only adds safe diagnostic
+  metadata after an existing rejection. No JSON repair, citation repair or retry was added.
+  No Python runtime service, extra tool or knowledge worker was introduced in this scope.
+- This milestone and the earlier G4/G5 work remain local and uncommitted. No commit, tag
+  or push was performed. Real model compliance remains as measured in the earlier reports.
+
+See [model settings and failure diagnostics](model-settings.md),
+[evaluation methodology](evaluation/README.md),
+[v2 mock results](evaluation/reports/2026-09-14-diagnostics-v2-mock.json) and
+[isolated desktop smoke record](evaluation/reports/2026-09-14-model-settings-desktop-smoke.json).
+The design reference is the [fixed-version TraceMemo source review](research/tracememo-structured-output-backend-review-2026-09-14.md).
+
+---
+
 # D5-G G4/G5 Desktop and Evaluation
 
 | Field | Result |

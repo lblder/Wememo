@@ -1,4 +1,4 @@
-export const EVALUATION_VERSION = 'wememo-evidence-question-eval-v1'
+export const EVALUATION_VERSION = 'wememo-evidence-question-eval-v2'
 export type EvaluationCategory = 'metrics' | 'alternatives' | 'counter-evidence' | 'insufficiency' | 'out-of-bounds'
 export interface EvaluationCase { id: string; category: EvaluationCategory; question: string }
 export const EVALUATION_CASES: readonly EvaluationCase[] = Object.freeze([

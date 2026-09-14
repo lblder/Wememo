@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import type { GeneratedReasoning, ReasoningProviderStatus } from '../../shared/reasoning-ipc'
 import type { MetricEvidence, MessageEvidence } from '../../shared/interaction-evidence'
 import type { SemanticEvidence } from '../../shared/semantic-evidence'
+import type { ReasoningDiagnostic } from '../../shared/reasoning-diagnostic'
+import { ReasoningFailureDetail } from './ReasoningFailureDetail'
 
 type Evidence = MetricEvidence | MessageEvidence | SemanticEvidence
 const dateFormatter = new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Shanghai' })
@@ -70,6 +72,7 @@ export function ReasoningPanel({ accountId, conversationId }: { accountId: strin
   const [provider, setProvider] = useState<ReasoningProviderStatus | null>(null)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+  const [diagnostic, setDiagnostic] = useState<ReasoningDiagnostic | undefined>()
   const [value, setValue] = useState<GeneratedReasoning | null>(null)
   const generation = useRef(0)
   useEffect(() => {
@@ -83,12 +86,12 @@ export function ReasoningPanel({ accountId, conversationId }: { accountId: strin
   async function generate(): Promise<void> {
     if (pending || !provider?.configured) return
     const current = ++generation.current
-    setPending(true); setError(''); setValue(null)
+    setPending(true); setError(''); setDiagnostic(undefined); setValue(null)
     try {
       const response = await window.desktop.generateReasoning({ accountId, conversationId, days: 7 })
       if (generation.current !== current) return
       if (response.ok) setValue(response.value)
-      else setError(response.error.message)
+      else { setError(response.error.message); setDiagnostic(response.error.diagnostic) }
     } catch {
       if (generation.current === current) setError('解释请求失败，请重试。')
     } finally {
@@ -106,6 +109,7 @@ export function ReasoningPanel({ accountId, conversationId }: { accountId: strin
       </button>
       {pending && <p role="status">正在校验模型输出与证据引用，请稍候。</p>}
       {error && <p role="alert">{error}</p>}
+      <ReasoningFailureDetail diagnostic={diagnostic} />
       {value && <ReasoningResultView value={value} />}
     </section>
   )

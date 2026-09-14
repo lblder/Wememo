@@ -1,5 +1,6 @@
 import type { AnalysisContextPack } from './analysis-context'
 import type { InteractionReasoningResult } from './interaction-reasoning'
+import type { ReasoningDiagnostic } from './reasoning-diagnostic'
 
 /** Renderer can request a scope, never supply prompts, evidence or a Context Pack. */
 export interface GenerateReasoningRequest {
@@ -30,7 +31,7 @@ export interface GeneratedReasoning {
 
 export type GenerateReasoningResponse =
   | { ok: true; value: GeneratedReasoning }
-  | { ok: false; error: { code: ReasoningErrorCode; message: string } }
+  | { ok: false; error: { code: ReasoningErrorCode; message: string; diagnostic?: ReasoningDiagnostic } }
 
 export class ReasoningRequestValidationError extends Error {
   constructor() {

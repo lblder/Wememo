@@ -14,12 +14,15 @@ import { parseInteractionReasoningOutput, ReasoningOutputParseError } from '../r
 import { EvidenceCitationValidationError } from '../reasoning/evidence-citation-validator'
 import { ProviderRequestError } from '../providers/provider-request-error'
 import { EVALUATION_CASES, EVALUATION_VERSION, type EvaluationCase } from './evidence-question-cases'
+import { diagnoseReasoningFailure } from '../diagnostics/reasoning-failure-diagnostic'
+import type { ReasoningDiagnostic } from '../../shared/reasoning-diagnostic'
 
 export type EvaluationPath = 'direct-qa' | 'evidence-agent'
 export interface EvaluationRecord {
   caseId: string; category: EvaluationCase['category']; path: EvaluationPath
   providerResponded: boolean; providerResponses: number; modelCalls: number; toolCalls: number
   finalResponse: boolean; schemaPass: boolean | null; citationPass: boolean | null
+  jsonPass: boolean | null; fieldsPass: boolean | null; diagnostic: ReasoningDiagnostic | null
   latencyMs: number; finalSuccess: boolean; failureCode: EvidenceQuestionErrorCode | null
 }
 export interface EvaluationProviders { direct: LLMProvider; agent: ToolCallingProvider }
@@ -45,7 +48,7 @@ export async function evaluateQuestion(testCase: EvaluationCase, path: Evaluatio
   const started = performance.now()
   const record: EvaluationRecord = { caseId: testCase.id, category: testCase.category, path,
     providerResponded: false, providerResponses: 0, modelCalls: 0, toolCalls: 0,
-    finalResponse: false, schemaPass: null, citationPass: null,
+    finalResponse: false, schemaPass: null, citationPass: null, jsonPass: null, fieldsPass: null, diagnostic: null,
     latencyMs: 0, finalSuccess: false, failureCode: null }
   let observing = true
   const final = (text: string): void => {
@@ -53,9 +56,12 @@ export async function evaluateQuestion(testCase: EvaluationCase, path: Evaluatio
     record.finalResponse = true
     try {
       parseInteractionReasoningOutput(text)
-      record.schemaPass = true
+      record.jsonPass = true; record.fieldsPass = true; record.schemaPass = true
     } catch (error) {
+      record.jsonPass = !(error instanceof ReasoningOutputParseError)
+      record.fieldsPass = record.jsonPass ? false : null
       record.schemaPass = false
+      record.diagnostic = diagnoseReasoningFailure(error, text) ?? null
     }
   }
   try {
@@ -84,10 +90,12 @@ export async function evaluateQuestion(testCase: EvaluationCase, path: Evaluatio
       record.finalSuccess = response.ok
       if (!response.ok) {
         record.failureCode = response.error.code
+        record.diagnostic = response.error.diagnostic ?? record.diagnostic
       }
     }
   } catch (error) {
     record.failureCode = failureCode(error)
+    record.diagnostic = record.diagnostic ?? diagnoseReasoningFailure(error) ?? null
   }
   finally { observing = false }
   record.providerResponded = record.providerResponses > 0
@@ -103,6 +111,10 @@ export function summarizeEvaluation(records: readonly EvaluationRecord[]) {
     providerResponse: rate(rows.reduce((n, row) => n + row.providerResponses, 0), rows.reduce((n, row) => n + row.modelCalls, 0)),
     runsWithProviderResponse: rate(rows.filter(row => row.providerResponded).length, rows.length),
     structuredOutput: rate(rows.filter(row => row.schemaPass === true).length, rows.filter(row => row.schemaPass !== null).length),
+    jsonSyntax: rate(rows.filter(row => row.jsonPass === true).length, rows.filter(row => row.jsonPass !== null).length),
+    fields: rate(rows.filter(row => row.fieldsPass === true).length, rows.filter(row => row.fieldsPass !== null).length),
+    diagnosticFailures: Object.fromEntries([...new Set(rows.flatMap(row => row.diagnostic ? [row.diagnostic.kind] : []))]
+      .map(kind => [kind, rows.filter(row => row.diagnostic?.kind === kind).length])),
     citation: rate(rows.filter(row => row.citationPass === true).length, rows.filter(row => row.citationPass !== null).length),
     endToEndValid: rate(rows.filter(row => row.finalSuccess).length, rows.length),
     modelCalls: rows.reduce((n, row) => n + row.modelCalls, 0), toolCalls: rows.reduce((n, row) => n + row.toolCalls, 0),

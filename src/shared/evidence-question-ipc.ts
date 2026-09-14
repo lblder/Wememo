@@ -1,4 +1,5 @@
 import { validateGenerateReasoningRequest, type GeneratedReasoning, type GenerateReasoningRequest } from './reasoning-ipc'
+import type { ReasoningDiagnostic } from './reasoning-diagnostic'
 
 export interface EvidenceQuestionRequest extends GenerateReasoningRequest { question: string }
 export interface EvidenceQuestionStats { modelCalls: number; toolCalls: number; deliveredCount: number; elapsedMs: number }
@@ -7,7 +8,7 @@ export type EvidenceQuestionFailurePhase = 'invalid-model-output' | 'invalid-cit
 /** Fixed local copy only. Never render arbitrary provider error messages. */
 export const EVIDENCE_QUESTION_ERRORS = {
   'invalid-request': ['request-error', '问题格式无效', '请填写 1–1000 字的问题，并选择有效会话和 1–31 天范围。'],
-  'not-configured': ['provider-error', '模型尚未配置', '请在 Main 启动环境中配置模型后重启应用。'],
+  'not-configured': ['provider-error', '模型尚未配置', '请打开模型设置，保存 DeepSeek 配置后再发起。'],
   busy: ['request-error', '已有追问正在运行', '请等待当前追问结束后再发起。'],
   'no-data': ['request-error', '所选时期没有数据', '请选择有聊天数据的会话或扩大天数。'],
   'invalid-context': ['request-error', '本地分析数据无效', '请重新分析当前会话。'],
@@ -28,7 +29,7 @@ export const EVIDENCE_QUESTION_ERRORS = {
 export type EvidenceQuestionErrorCode = keyof typeof EVIDENCE_QUESTION_ERRORS
 export type EvidenceQuestionResponse =
   | { ok: true; value: GeneratedReasoning; stats: EvidenceQuestionStats }
-  | { ok: false; error: { code: EvidenceQuestionErrorCode }; stats?: EvidenceQuestionStats }
+  | { ok: false; error: { code: EvidenceQuestionErrorCode; diagnostic?: ReasoningDiagnostic }; stats?: EvidenceQuestionStats }
 
 export function validateEvidenceQuestionRequest(value: unknown): EvidenceQuestionRequest {
   const reject = (): never => { throw new Error('invalid-request') }

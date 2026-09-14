@@ -1,5 +1,6 @@
 import type { GenerateReasoningRequest } from '../shared/reasoning-ipc'
 import type { EvidenceQuestionRequest } from '../shared/evidence-question-ipc'
+import type { SaveModelSettingsRequest } from '../shared/model-settings'
 import {
   contextBridge,
   ipcRenderer
@@ -36,6 +37,8 @@ const platform =
     : 'unknown'
 
 const desktopApi: DesktopApi = Object.freeze({
+  getModelSettings: () => ipcRenderer.invoke(DESKTOP_CHANNELS.modelSettingsStatus),
+  saveModelSettings: (request: SaveModelSettingsRequest) => ipcRenderer.invoke(DESKTOP_CHANNELS.saveModelSettings, request),
   getEvidenceQuestionStatus: () => ipcRenderer.invoke(DESKTOP_CHANNELS.evidenceQuestionStatus),
   askEvidenceQuestion: (request: EvidenceQuestionRequest) => ipcRenderer.invoke(DESKTOP_CHANNELS.askEvidenceQuestion, request),
   cancelEvidenceQuestion: () => ipcRenderer.invoke(DESKTOP_CHANNELS.cancelEvidenceQuestion),

@@ -62,11 +62,13 @@ describe('ReasoningService', () => {
     const malformed = new ReasoningService(analysis, new MockLLMProvider({ responseText: 'PRIVATE_MODEL_TEXT' }), status)
     const response = await malformed.generate(request)
     if (!response.ok) expect(response.error.message).toContain('JSON 解析失败')
+    expect(response).toMatchObject({ error: { diagnostic: { kind: 'invalid-json' } } })
     expect(response.ok).toBe(false)
     const adapter = new ReasoningService(analysis, { id: 'test', async generate() { throw new ProviderRequestError('invalid-output') } }, status)
     const failed = await adapter.generate(request)
     expect(failed.ok).toBe(false)
     if (!failed.ok) expect(failed.error.message).toContain('接口响应校验失败')
+    expect(failed).toMatchObject({ error: { diagnostic: { kind: 'invalid-provider-response' } } })
   })
   it('runs analysis in Main and returns result with its exact citation context', async () => {
     const { service, analysis, provider, pack } = setup()

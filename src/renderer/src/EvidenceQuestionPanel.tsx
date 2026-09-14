@@ -3,6 +3,7 @@ import type { ReasoningProviderStatus } from '../../shared/reasoning-ipc'
 import { EVIDENCE_QUESTION_ERRORS } from '../../shared/evidence-question-ipc'
 import { EvidenceQuestionController, type QuestionState } from './evidence-question-controller'
 import { ReasoningResultView } from './ReasoningPanel'
+import { ReasoningFailureDetail } from './ReasoningFailureDetail'
 
 export function QuestionOutcome({ state }: { state: QuestionState }): React.JSX.Element {
   const { response } = state
@@ -13,6 +14,7 @@ export function QuestionOutcome({ state }: { state: QuestionState }): React.JSX.
       {state.phase === 'running' ? <div className="question-status" role="status"><strong>正在取证与校验</strong><p>正在按需读取当前会话的分析证据。通过结构和引用校验后才显示答案。</p></div> : null}
       {failure ? <div className="question-status" role={state.phase === 'cancelled' ? 'status' : 'alert'}>
         <strong>{failure[1]}</strong><p>{failure[2]}</p>
+        <ReasoningFailureDetail diagnostic={response && !response.ok ? response.error.diagnostic : undefined} />
         {state.phase === 'cancelled' && state.busy ? <p>正在结束当前请求…</p> : null}
       </div> : null}
       {response?.ok ? <>

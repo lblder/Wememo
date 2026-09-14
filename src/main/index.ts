@@ -1,5 +1,8 @@
 import { ReasoningService } from './services/reasoning-service'
-import { loadDeepSeekConfiguration } from './providers/deepseek-config'
+import type { DeepSeekConfigurationResult } from './providers/deepseek-config'
+import { ModelConfigurationStore } from './providers/model-configuration-store'
+import { ModelSettingsService } from './services/model-settings-service'
+import { registerModelSettingsIpc } from './services/model-settings-ipc'
 import { DeepSeekProvider } from './providers/deepseek-provider'
 import { DeepSeekToolCallingProvider } from './providers/deepseek-tool-calling-provider'
 import { EvidenceQuestionService } from './services/evidence-question-service'
@@ -21,6 +24,7 @@ import {
   dialog,
   ipcMain,
   net,
+  safeStorage,
   type IpcMainInvokeEvent
 } from 'electron'
 
@@ -64,6 +68,7 @@ import {
 } from './analytics/interaction-analysis-service'
 
 let reasoningService: ReasoningService | undefined
+let modelSettingsService: ModelSettingsService | undefined
 let evidenceQuestionService: EvidenceQuestionService | undefined
 let applicationWindow: BrowserWindow | undefined
 
@@ -101,7 +106,10 @@ function initializeDatabase(): void {
     new InteractionAnalysisService(
       messageRepository
     )
-  const deepseek = loadDeepSeekConfiguration(process.env)
+
+}
+
+function applyModelConfiguration(deepseek: DeepSeekConfigurationResult): void {
   const analysis = getInteractionAnalysisService()
   evidenceQuestionService = new EvidenceQuestionService(
     analysis,
@@ -109,10 +117,24 @@ function initializeDatabase(): void {
     deepseek.status
   )
   reasoningService = new ReasoningService(
-    interactionAnalysisService,
+    analysis,
     deepseek.configuration ? new DeepSeekProvider(deepseek.configuration, net.fetch.bind(net)) : undefined,
     deepseek.status
   )
+}
+
+async function initializeModelSettings(): Promise<void> {
+  const store = new ModelConfigurationStore(join(app.getPath('userData'), 'model-settings'), {
+    async available() {
+      if (process.platform === 'linux' && (!safeStorage.isEncryptionAvailable() || ['basic_text', 'unknown'].includes(safeStorage.getSelectedStorageBackend()))) return false
+      return safeStorage.isAsyncEncryptionAvailable()
+    },
+    encrypt: value => safeStorage.encryptStringAsync(value),
+    decrypt: async value => (await safeStorage.decryptStringAsync(value)).result
+  })
+  modelSettingsService = new ModelSettingsService(store, process.env,
+    () => Boolean(reasoningService?.isBusy || evidenceQuestionService?.isBusy), applyModelConfiguration)
+  await modelSettingsService.initialize()
 }
 
 function getInteractionAnalysisService():
@@ -137,7 +159,14 @@ function isTrustedReasoningSender(event: IpcMainInvokeEvent): boolean {
 }
 
 function registerMessageIpc(): void {
-  registerEvidenceQuestionIpc(ipcMain, evidenceQuestionService!, isTrustedReasoningSender)
+  if (modelSettingsService) registerModelSettingsIpc(ipcMain, modelSettingsService, isTrustedReasoningSender)
+  registerEvidenceQuestionIpc(ipcMain, {
+    getStatus: () => evidenceQuestionService!.getStatus(),
+    cancel: owner => evidenceQuestionService!.cancel(owner),
+    ask: (request, owner) => modelSettingsService?.isSaving
+      ? Promise.resolve({ ok: false, error: { code: 'busy' } })
+      : evidenceQuestionService!.ask(request, owner)
+  }, isTrustedReasoningSender)
   ipcMain.handle(DESKTOP_CHANNELS.reasoningStatus, (event) => {
     if (!isTrustedReasoningSender(event) || !reasoningService) throw new Error('Reasoning request rejected')
     return reasoningService.getStatus()
@@ -146,6 +175,7 @@ function registerMessageIpc(): void {
     if (!isTrustedReasoningSender(event) || !reasoningService) {
       return { ok: false, error: { code: 'invalid-request', message: '请求来源无效。' } }
     }
+    if (modelSettingsService?.isSaving) return { ok: false, error: { code: 'busy', message: '正在保存模型配置，请稍候。' } }
     return reasoningService.generate(request)
   })
   ipcMain.handle(
@@ -310,8 +340,9 @@ function createWindow(): void {
   }
 }
 
-void app.whenReady().then(() => {
+void app.whenReady().then(async () => {
   initializeDatabase()
+  await initializeModelSettings()
 
   registerMessageIpc()
 

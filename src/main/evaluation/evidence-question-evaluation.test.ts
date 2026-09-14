@@ -68,6 +68,24 @@ describe('fixed paired evaluation', () => {
     expect(providers.agent.generate).not.toHaveBeenCalled()
     expect(report.summary['direct-qa'].structuredOutput.rate).toBeNull()
     expect(report.summary['evidence-agent'].providerResponse.total).toBe(0)
+    expect(report.summary['direct-qa'].jsonSyntax.rate).toBeNull()
+    expect(report.summary['direct-qa'].fields.rate).toBeNull()
+  })
+  it.each(['direct-qa', 'evidence-agent'] as const)('measures JSON and fields separately on %s with unchanged combined schema semantics', async path => {
+    const providers = createMockEvaluationProviders(); const pack = demoPack()
+    let text = 'PRIVATE_INVALID_JSON'
+    providers.direct = { id: 'mock', async generate() { return { providerId: 'mock', text } } }
+    providers.agent = { id: 'mock', async generate() { return { type: 'final', text } } }
+    const json = await evaluateQuestion(EVALUATION_CASES[0], path, pack, providers)
+    text = JSON.stringify({ ...resultFor(pack), PRIVATE_FIELD: 'PRIVATE_VALUE' })
+    const fields = await evaluateQuestion(EVALUATION_CASES[0], path, pack, providers)
+    expect(json).toMatchObject({ jsonPass: false, fieldsPass: null, schemaPass: false, diagnostic: { kind: 'invalid-json' } })
+    expect(fields).toMatchObject({ jsonPass: true, fieldsPass: false, schemaPass: false, diagnostic: { kind: 'invalid-fields' } })
+    const summary = summarizeEvaluation([json, fields])[path]
+    expect(summary.jsonSyntax).toEqual({ passed: 1, total: 2, rate: 0.5 })
+    expect(summary.fields).toEqual({ passed: 0, total: 1, rate: 0 })
+    expect(summary.diagnosticFailures).toEqual({ 'invalid-json': 1, 'invalid-fields': 1 })
+    expect(JSON.stringify([json, fields])).not.toContain('PRIVATE')
   })
   it('measures tool budget failure without pretending final schema validation happened', async () => {
     const providers = createMockEvaluationProviders()

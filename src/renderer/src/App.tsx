@@ -1,5 +1,6 @@
 import { ReasoningPanel } from './ReasoningPanel'
 import { EvidenceQuestionPanel } from './EvidenceQuestionPanel'
+import { ModelSettingsPanel } from './ModelSettingsPanel'
 import type { SemanticEvidence } from '../../shared/semantic-evidence'
 import {
   useEffect,
@@ -52,6 +53,7 @@ function SemanticEvidenceList({ items }: { items: SemanticEvidence[] }): React.J
 }
 
 export function App(): React.JSX.Element {
+  const [modelRevision, setModelRevision] = useState(0)
   const platform =
     window.desktop.getPlatform()
 
@@ -267,18 +269,20 @@ export function App(): React.JSX.Element {
         <header className="titlebar">
           <div>
             <p className="eyebrow">
-              D2 Data Layer
+              Evidence-based Interaction Analysis
             </p>
 
             <h1 id="app-title">
-              WeChat Relationship Agent
+              Wememo
             </h1>
           </div>
 
           <span className="stage-badge">
-            当前阶段：D2
+            D5 · 证据追问
           </span>
         </header>
+
+        <ModelSettingsPanel onSaved={() => setModelRevision(value => value + 1)} />
 
         <aside
           className="synthetic-notice"
@@ -416,7 +420,7 @@ export function App(): React.JSX.Element {
 
         {selectedScope && (
           <ReasoningPanel
-            key={JSON.stringify([selectedScope.accountId, selectedScope.conversationId])}
+            key={JSON.stringify([selectedScope.accountId, selectedScope.conversationId, modelRevision])}
             accountId={selectedScope.accountId}
             conversationId={selectedScope.conversationId}
           />
@@ -424,7 +428,7 @@ export function App(): React.JSX.Element {
 
         {selectedScope && (
           <EvidenceQuestionPanel
-            key={JSON.stringify([selectedScope.accountId, selectedScope.conversationId])}
+            key={JSON.stringify([selectedScope.accountId, selectedScope.conversationId, modelRevision])}
             accountId={selectedScope.accountId}
             conversationId={selectedScope.conversationId}
           />

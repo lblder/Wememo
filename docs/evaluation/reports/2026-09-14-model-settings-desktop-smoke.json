@@ -1,0 +1,24 @@
+{
+  "version": "wememo-model-settings-desktop-smoke-v1",
+  "date": "2026-09-14",
+  "mode": "isolated-electron-synthetic-data-mocked-network",
+  "platform": "darwin",
+  "electronVersion": "44.2.0",
+  "realOsEncryption": true,
+  "syntheticCredentialsOnly": true,
+  "syntheticMessagesOnly": true,
+  "checks": {
+    "saveViaRenderer": true,
+    "passwordFieldCleared": true,
+    "encryptedFiles": true,
+    "mainBusyGuard": true,
+    "jsonDiagnostic": true,
+    "citationDiagnostic": true,
+    "rejectedOutputHidden": true,
+    "restartLoadsEncryptedSettings": true
+  },
+  "mockedProviderRequests": 2,
+  "realModelRequests": 0,
+  "qualityScoring": "not-performed",
+  "scope": "Desktop save, reload and rejection flows. Storage edge-case refinements made afterward are covered by the final 543-test suite; this record is not a live-model evaluation."
+}

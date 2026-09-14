@@ -1,5 +1,6 @@
 import type { GenerateReasoningRequest, GenerateReasoningResponse, ReasoningProviderStatus } from './reasoning-ipc'
 import type { EvidenceQuestionRequest, EvidenceQuestionResponse } from './evidence-question-ipc'
+import type { ModelSettingsStatus, SaveModelSettingsRequest, SaveModelSettingsResponse } from './model-settings'
 import type { CanonicalMessage } from './message'
 import type {
   MessageQuery,
@@ -39,6 +40,8 @@ export type DesktopPlatform =
  * Main 与 Preload 使用的 IPC 通道名称。
  */
 export const DESKTOP_CHANNELS = {
+  modelSettingsStatus: 'model-settings:status',
+  saveModelSettings: 'model-settings:save',
   evidenceQuestionStatus: 'evidence-question:status',
   askEvidenceQuestion: 'evidence-question:ask',
   cancelEvidenceQuestion: 'evidence-question:cancel',
@@ -64,6 +67,8 @@ export const DESKTOP_CHANNELS = {
  * - Electron Main API
  */
 export interface DesktopApi {
+  getModelSettings: () => Promise<ModelSettingsStatus>
+  saveModelSettings: (request: SaveModelSettingsRequest) => Promise<SaveModelSettingsResponse>
   getEvidenceQuestionStatus: () => Promise<ReasoningProviderStatus>
   askEvidenceQuestion: (request: EvidenceQuestionRequest) => Promise<EvidenceQuestionResponse>
   cancelEvidenceQuestion: () => Promise<{ cancelled: boolean }>
