@@ -1,0 +1,1812 @@
+{
+  "version": "wememo-json-schema-probe-v1",
+  "createdAt": "2026-09-14T05:41:44.984Z",
+  "modelId": "deepseek-flash",
+  "input": "inline-synthetic-only",
+  "requestLimit": 24,
+  "automaticRetries": 0,
+  "validator": "ajv-8.17.1",
+  "transport": "curl-local-proxy",
+  "reasoning": "disabled",
+  "sourceSha256": "de10c4bbe4ecf237dd607516be1c395d28402796fa7ba35b3f287f2fd30ae2bb",
+  "instructions": "这是合成数据的 JSON 接口能力测试。正常任务请用简体中文，生成符合 response format 的 JSON。不要使用 Markdown 围栏。",
+  "completed": true,
+  "interrupted": false,
+  "requests": 24,
+  "plan": [
+    {
+      "id": "B1",
+      "category": "basic-aligned",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "标签是测试，数量是2。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "B2",
+      "category": "basic-extra-key-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 label=测试、count=2，并务必添加第三个字段 extra=true。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "B3",
+      "category": "basic-type-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请原样输出这个 JSON，不要转换类型：{\"label\":17,\"count\":\"two\"}。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "N1",
+      "category": "wememo-nested-aligned",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "仅有两条合成证据：ev-probe-support（support）表示消息数从20降到10；ev-probe-context（context）表示合成对象明确说最近工作忙。不得推断真实感情。输出1个finding、1个alternativeExplanation和至少1项uncertainty。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "N2",
+      "category": "wememo-extra-confidence-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "仅有两条合成证据：ev-probe-support（support）表示消息数从20降到10；ev-probe-context（context）表示合成对象明确说最近工作忙。不得推断真实感情。输出1个finding、1个alternativeExplanation和至少1项uncertainty。 额外要求：alternativeExplanations 每项都必须加 confidence=\"high\"。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "N3",
+      "category": "wememo-missing-id-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "仅有两条合成证据：ev-probe-support（support）表示消息数从20降到10；ev-probe-context（context）表示合成对象明确说最近工作忙。不得推断真实感情。输出1个finding、1个alternativeExplanation和至少1项uncertainty。 额外要求：alternativeExplanations 每项必须省略 id，并把 explanation 改名成 claim。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "E1",
+      "category": "alias-enum-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "evidenceId": {
+            "type": "string",
+            "enum": [
+              "ev-probe-support",
+              "ev-probe-context"
+            ]
+          }
+        },
+        "required": [
+          "evidenceId"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 evidenceId=ev-not-delivered，绝对不要改成其他编号。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "E2",
+      "category": "confidence-enum-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        },
+        "required": [
+          "confidence"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 confidence=\"certain\"。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "E3",
+      "category": "version-enum-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 version=\"v999\"。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "A1",
+      "category": "array-unique-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 items=[1,1]，保留两个重复的1。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "A2",
+      "category": "array-min-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 2
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 items=[]。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "A3",
+      "category": "array-max-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "maxItems": 2
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 items=[1,2,3,4]。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "Z1",
+      "category": "wememo-empty-findings",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "maxItems": 0,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "没有support。只有ev-probe-context这条context，表示合成对象说工作忙。findings应为空，可以写替代解释并说明不确定性。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "S1",
+      "category": "nonempty-string-conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "summary"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出 summary=\"\"。",
+      "expected": "schema-valid"
+    },
+    {
+      "id": "I1",
+      "category": "invalid-schema-negative-control",
+      "schema": {
+        "type": "not-a-json-schema-type"
+      },
+      "prompt": "请输出任意JSON对象。",
+      "expected": "http-rejection"
+    },
+    {
+      "id": "T1",
+      "category": "tool-with-schema",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "先调用read_evidence读取ev-probe-support和ev-probe-context。收到工具结果之前不要作答。",
+      "expected": "schema-valid",
+      "kind": "tool-start"
+    },
+    {
+      "id": "T2",
+      "category": "tool-result-schema-final",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "",
+      "expected": "schema-valid",
+      "kind": "tool-final"
+    },
+    {
+      "id": "L1",
+      "category": "truncation",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "wememo-interaction-reasoning-v1"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-support"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "claim",
+                "evidenceIds",
+                "confidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "alternativeExplanations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ev-probe-context"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 3,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "id",
+                "explanation",
+                "evidenceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "version",
+          "summary",
+          "findings",
+          "alternativeExplanations",
+          "uncertainties"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "仅有两条合成证据：ev-probe-support（support）表示消息数从20降到10；ev-probe-context（context）表示合成对象明确说最近工作忙。不得推断真实感情。输出1个finding、1个alternativeExplanation和至少1项uncertainty。",
+      "expected": "incomplete-rejected",
+      "maxTokens": 1
+    },
+    {
+      "id": "C1",
+      "category": "responses-json-object-control",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请生成JSON，精确包含label字符串和count整数。标签测试，数量2。",
+      "expected": "schema-valid",
+      "mode": "json_object"
+    },
+    {
+      "id": "C2",
+      "category": "chat-json-schema-control",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请生成JSON，标签测试，数量2。",
+      "expected": "compatibility-control",
+      "endpoint": "chat",
+      "mode": "json_schema"
+    },
+    {
+      "id": "C3",
+      "category": "chat-json-object-control",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请生成JSON，精确包含label字符串和count整数。标签测试，数量2。",
+      "expected": "schema-valid",
+      "endpoint": "chat",
+      "mode": "json_object"
+    },
+    {
+      "id": "C4",
+      "category": "responses-no-schema-conflict-control",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请原样输出这个JSON：{\"label\":17,\"count\":\"two\"}。",
+      "expected": "unconstrained-control",
+      "mode": "json_object"
+    },
+    {
+      "id": "X1",
+      "category": "undocumented-strict-true-probe",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请原样输出这个JSON：{\"label\":17,\"count\":\"two\",\"extra\":true}。",
+      "expected": "schema-valid",
+      "strict": true
+    },
+    {
+      "id": "X2",
+      "category": "missing-schema-name-negative-control",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "prompt": "请输出JSON，标签测试，数量2。",
+      "expected": "http-rejection",
+      "omitName": true
+    }
+  ],
+  "records": [
+    {
+      "id": "B1",
+      "category": "basic-aligned",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "1e74f646aa443c10938558d4b68cfdcc8d7281857f381aa7d242af224671373d",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"label\": \"测试\", \"count\": 2}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 103,
+        "output_tokens": 12,
+        "total_tokens": 115
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 2695
+    },
+    {
+      "id": "B2",
+      "category": "basic-extra-key-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "c1dbc03928edbc2b6463941af47dfad53123dd46415056206ff751adc0298b45",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"label\": \"测试\", \"count\": 2}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 113,
+        "output_tokens": 12,
+        "total_tokens": 125
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 2985
+    },
+    {
+      "id": "B3",
+      "category": "basic-type-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "e37f9da3ee67f5416b3423bf2f727e2708d14d323b482495763d0cf0c5c0eb86",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"label\":\"17\",\"count\":2}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 116,
+        "output_tokens": 9,
+        "total_tokens": 125
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 2841
+    },
+    {
+      "id": "N1",
+      "category": "wememo-nested-aligned",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "1173137256cde47049c20574ea3fd3146a3fa181003bc2d9de20b267820ee443",
+      "schemaSha256": "29636f5abe4357dc37ea9948d95c3394b6a297beea1e36608cc1a7b77412a499",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"version\":\"wememo-interaction-reasoning-v1\",\"summary\":\"基于合成证据，仅能观察到消息数量从20降到10，且合成对象自述最近工作忙；这不足以推断真实感情变化，需谨慎解释。\",\"findings\":[{\"id\":\"finding-msg-drop\",\"claim\":\"消息数由20降至10，提示互动频率下降。\",\"evidenceIds\":[\"ev-probe-support\"],\"confidence\":\"medium\"}],\"alternativeExplanations\":[{\"id\":\"alt-busy-work\",\"explanation\":\"合成对象明确表示最近工作忙，互动减少可能由工作负担导致，而非感情变化。\",\"evidenceIds\":[\"ev-probe-context\"]}],\"uncertainties\":[\"消息数下降只能反映互动频率，不能直接说明感情状态。\",\"合成对象自述工作忙未经独立验证，可能只是单方面解释。\",\"仅有两条合成证据，样本与时间跨度不足，无法排除其他原因。\"]}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 499,
+        "output_tokens": 197,
+        "total_tokens": 696
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 2895
+    },
+    {
+      "id": "N2",
+      "category": "wememo-extra-confidence-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "2598674eb8a62906dd460ad40871cee6d89dd732942358ca91b58f0246fbca95",
+      "schemaSha256": "29636f5abe4357dc37ea9948d95c3394b6a297beea1e36608cc1a7b77412a499",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "additionalProperties",
+          "instancePath": "/alternativeExplanations/0",
+          "schemaPath": "#/properties/alternativeExplanations/items/additionalProperties"
+        }
+      ],
+      "finalText": "{\"version\":\"wememo-interaction-reasoning-v1\",\"summary\":\"合成数据显示消息数由20降至10，且合成对象自述最近工作忙；仅据此可描述互动频率下降与一个表面情境，不能推断真实感情。\",\"findings\":[{\"id\":\"finding-1\",\"claim\":\"消息数从20降到10，互动频率下降这一现象有合成证据支持。\",\"evidenceIds\":[\"ev-probe-support\"],\"confidence\":\"medium\"}],\"alternativeExplanations\":[{\"id\":\"alt-1\",\"explanation\":\"合成对象明确自述最近工作忙，这可以解释消息数减少，而不需要引入其他动机。\",\"evidenceIds\":[\"ev-probe-context\"],\"confidence\":\"high\"}],\"uncertainties\":[\"仅有两条合成证据，无法确认消息数下降的原因是否仅为工作忙。\",\"不得推断真实感情；工作忙的表述与消息数变化之间是否存在因果仍不确定。\"]}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 516,
+        "output_tokens": 194,
+        "total_tokens": 710
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 3757
+    },
+    {
+      "id": "N3",
+      "category": "wememo-missing-id-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "2e13f454a0e013d7416edf868cad130df708c9b2f2838ebd435afe301fdf393b",
+      "schemaSha256": "29636f5abe4357dc37ea9948d95c3394b6a297beea1e36608cc1a7b77412a499",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "required",
+          "instancePath": "/alternativeExplanations/0",
+          "schemaPath": "#/properties/alternativeExplanations/items/required"
+        },
+        {
+          "keyword": "required",
+          "instancePath": "/alternativeExplanations/0",
+          "schemaPath": "#/properties/alternativeExplanations/items/required"
+        },
+        {
+          "keyword": "additionalProperties",
+          "instancePath": "/alternativeExplanations/0",
+          "schemaPath": "#/properties/alternativeExplanations/items/additionalProperties"
+        }
+      ],
+      "finalText": "{\"version\":\"wememo-interaction-reasoning-v1\",\"summary\":\"现有合成证据只显示互动消息数从20降到10，且同一合成对象自述最近工作忙；这只能支持互动频率下降与自述忙碌，不能推出真实感情变化。\",\"findings\":[{\"id\":\"f-001\",\"claim\":\"消息数从20降到10，表明这段时间的互动频率较此前有所下降。\",\"evidenceIds\":[\"ev-probe-support\"],\"confidence\":\"high\"}],\"alternativeExplanations\":[{\"claim\":\"互动频率下降可能与合成对象自述的最近工作忙有关，忙碌状态减少了其可用于互动的精力或时间。\",\"evidenceIds\":[\"ev-probe-context\"]}],\"uncertainties\":[\"仅凭两条合成证据无法确定互动频率下降的原因，工作忙只是自述，不能排除其他未提供的因素。\",\"证据中没有关于情感状态、关系质量或双方意图的信息，因此不能推断真实感情是否发生变化。\"]}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 521,
+        "output_tokens": 202,
+        "total_tokens": 723
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 9874
+    },
+    {
+      "id": "E1",
+      "category": "alias-enum-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "317c4b4041d71a6b93a2f97c42839b2a3ecebb72b38f6f00c410b89b2161096c",
+      "schemaSha256": "b69c7d8bd610ca31f69e2198bec6e5902469b9fb51960c665dfe07fbab98430e",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"evidenceId\": \"ev-probe-support\"}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 117,
+        "output_tokens": 10,
+        "total_tokens": 127
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 2299
+    },
+    {
+      "id": "E2",
+      "category": "confidence-enum-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "966204b482e6b0b76e230d1c2251e868660e96ba27fe5d0164c68c239751bcc4",
+      "schemaSha256": "ba93cf70b917457ad22194b47469f71e20ab679a76972b24e9ed76e62926effb",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"confidence\": \"high\"}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 101,
+        "output_tokens": 6,
+        "total_tokens": 107
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 2554
+    },
+    {
+      "id": "E3",
+      "category": "version-enum-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "80ac8ad78805ffb6437418d5db3bf2ef0bcae40c8a9c4823960291c7fee6f578",
+      "schemaSha256": "95f49e673687f3934cdf8242294d252705a242dad8dd523817e1cda9905ae2f4",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"version\": \"wememo-interaction-reasoning-v1\"}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 105,
+        "output_tokens": 15,
+        "total_tokens": 120
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 3069
+    },
+    {
+      "id": "A1",
+      "category": "array-unique-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "34488100c3156c32076820202ecf01c396f424a8b66610635df3947c2eaf8de2",
+      "schemaSha256": "39ada5e67c7396414bc4da32cebd11a829ede1c2f21341d37f4d2f6f1d049c91",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "uniqueItems",
+          "instancePath": "/items",
+          "schemaPath": "#/properties/items/uniqueItems"
+        }
+      ],
+      "finalText": "{\"items\": [1, 1]}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 111,
+        "output_tokens": 9,
+        "total_tokens": 120
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 1845
+    },
+    {
+      "id": "A2",
+      "category": "array-min-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "ce93e12c5dc58ef4092be157ca05247927888719a7b156ec7760b7cc43835416",
+      "schemaSha256": "9e38cb4aef21342027ddbe61e261301989185f121330013bed1cebfbc2367d4d",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "minItems",
+          "instancePath": "/items",
+          "schemaPath": "#/properties/items/minItems"
+        }
+      ],
+      "finalText": "{\"items\":[]}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 104,
+        "output_tokens": 5,
+        "total_tokens": 109
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 1610
+    },
+    {
+      "id": "A3",
+      "category": "array-max-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "3d8b7231ba74511061d738c6514bdebd9b2ab57ad3cbf227310ccd14ec8c7b25",
+      "schemaSha256": "79a94aa5b67fdce1016666a0d82c0f1aae951a9075a0df10fc0201a0a57e1fab",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"items\":[1,2]}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 110,
+        "output_tokens": 7,
+        "total_tokens": 117
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 4256
+    },
+    {
+      "id": "Z1",
+      "category": "wememo-empty-findings",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "21642a43a9f82a73338545547bb4e5821f58f0ee9cee96fbc2d38faba7f2cd48",
+      "schemaSha256": "717f102083477388775fb5bf8e1b178d91aed569644bd4ca0b4e6d6d78aee95a",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"version\":\"wememo-interaction-reasoning-v1\",\"summary\":\"当前只有 ev-probe-context 一条上下文证据，显示合成对象称自己工作忙；没有任何 ev-probe-support 支持证据，因此 findings 为空，无法形成有依据的结论。对“工作忙”这一表述可作若干替代解释，但均缺乏支持性证据，需进一步探询验证。\",\"findings\":[],\"alternativeExplanations\":[{\"id\":\"alt-genuine-busy\",\"explanation\":\"合成对象确实处于工作繁忙状态，因此暂时无法投入更多互动；该解释与 ev-probe-context 的直接字面含义一致，但仍是未经证实的自述。\",\"evidenceIds\":[\"ev-probe-context\"]},{\"id\":\"alt-polite-decline\",\"explanation\":\"“工作忙”可能是一种礼貌性推脱或委婉拒绝，用于避免直接表达不愿继续互动；仅有该条上下文无法区分其与真实忙碌。\",\"evidenceIds\":[\"ev-probe-context\"]},{\"id\":\"alt-temporary-state\",\"explanation\":\"忙碌可能是短期或临时状态，随时间推移会发生变化，因此当前表述不足以推断长期互动意愿。\",\"evidenceIds\":[\"ev-probe-context\"]}],\"uncertainties\":[\"只有 ev-probe-context 一条上下文证据，缺少任何 ev-probe-support 支持证据，无法确认“工作忙”的真实性。\",\"“工作忙”是主观自述，无法排除礼貌推脱、测试性回应或情绪回避等动机。\",\"缺少时间、频率、具体情境等信息，无法判断该状态是暂时还是持续。\",\"没有行为数据（如回复延迟、互动变化）可交叉验证该表述。\",\"由于 findings 为空，本分析只能提供替代解释与不确定性，不构成结论。\"]}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 479,
+        "output_tokens": 376,
+        "total_tokens": 855
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 3283
+    },
+    {
+      "id": "S1",
+      "category": "nonempty-string-conflict",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "fb6d62eaae8f9b0757a4fdb9ee0ffd059b82512908608e956fb721ef58b207fe",
+      "schemaSha256": "c95a707ef5b1c03eba40e2b96d2800fa21336d30c612909f7591311dd5c3ad93",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "minLength",
+          "instancePath": "/summary",
+          "schemaPath": "#/properties/summary/minLength"
+        },
+        {
+          "keyword": "pattern",
+          "instancePath": "/summary",
+          "schemaPath": "#/properties/summary/pattern"
+        }
+      ],
+      "finalText": "{\"summary\":\"\"}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 102,
+        "output_tokens": 5,
+        "total_tokens": 107
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 4106
+    },
+    {
+      "id": "I1",
+      "category": "invalid-schema-negative-control",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "http-rejection",
+      "requestSha256": "95d432ed15cc2657d1e45cacaec1d21780f85c34be0d53d39b58c01cab418d92",
+      "schemaSha256": "f5e89bbbc586dab03749850018ebf2daffbe947daf94f7a7dc28c2b2f5df58bd",
+      "httpStatus": 400,
+      "responseStatus": null,
+      "jsonParsePass": null,
+      "schemaPass": null,
+      "schemaErrors": [],
+      "finalText": null,
+      "outcome": "http-rejection",
+      "usage": null,
+      "providerError": {
+        "code": "invalid_request_error",
+        "message": "Invalid json schema: \"not-a-json-schema-type\" is not valid under any of the schemas listed in the 'anyOf' keyword"
+      },
+      "latencyMs": 2113
+    },
+    {
+      "id": "T1",
+      "category": "tool-with-schema",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "49a2c8c6fd1621952a97c9fa767a185545df56a5bb76e46bf3e8b12f545d169a",
+      "schemaSha256": "29636f5abe4357dc37ea9948d95c3394b6a297beea1e36608cc1a7b77412a499",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": null,
+      "schemaPass": null,
+      "schemaErrors": [],
+      "finalText": null,
+      "outcome": "tool-call-valid",
+      "usage": {
+        "input_tokens": 778,
+        "output_tokens": 46,
+        "total_tokens": 824
+      },
+      "returnedModel": "deepseek-flash",
+      "toolCallCount": 1,
+      "toolArgumentsPass": true,
+      "latencyMs": 5038
+    },
+    {
+      "id": "T2",
+      "category": "tool-result-schema-final",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "3772a20f65f6a256d3c67e5c0aa5f5fd4766ca3539bfc425f83b000e4f244fd0",
+      "schemaSha256": "29636f5abe4357dc37ea9948d95c3394b6a297beea1e36608cc1a7b77412a499",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "enum",
+          "instancePath": "/findings/1/evidenceIds/1",
+          "schemaPath": "#/properties/findings/items/properties/evidenceIds/items/enum"
+        }
+      ],
+      "finalText": "{\"version\": \"wememo-interaction-reasoning-v1\", \"summary\": \"探针证据显示合成消息数量由20降至10，同时合成对象自述近期工作繁忙；据此可初步推断消息量下降与对方忙碌状态相关，但仅有两条单点证据，因果方向与替代解释仍无法排除。\", \"findings\": [{\"id\": \"finding-1\", \"claim\": \"合成消息数量从20降到10，表明交互消息量在观察窗口内减少了一半。\", \"evidenceIds\": [\"ev-probe-support\"], \"confidence\": \"high\"}, {\"id\": \"finding-2\", \"claim\": \"对方自述最近工作忙，这与消息量下降的时点相吻合，构成对“忙碌导致回复减少”这一解释的间接支持。\", \"evidenceIds\": [\"ev-probe-support\", \"ev-probe-context\"], \"confidence\": \"medium\"}], \"alternativeExplanations\": [{\"id\": \"alt-1\", \"explanation\": \"消息量下降可能源于我方主动发送减少、话题自然结束或平台/渠道变化，而非对方因工作忙而减少回应；现有上下文只说明对方的工作状态，未记录我方发送量与话题节奏。\", \"evidenceIds\": [\"ev-probe-context\"]}, {\"id\": \"alt-2\", \"explanation\": \"对方提到“工作忙”可能只是对当前状态的泛泛陈述或委婉回应，与消息量变化并无因果联系，二者同时出现属于巧合。\", \"evidenceIds\": [\"ev-probe-context\"]}], \"uncertainties\": [\"证据仅有两条，缺少消息发送方归属、时间分布和对话内容的细节，无法判断是双向减少还是单方减少。\", \"“最近工作忙”的表述时间点与消息量下降的时间窗口是否重叠未得到确认，因果方向可能相反。\", \"20→10的计数基准（时间段、统计口径）未说明，削减幅度能否代表真实互动意愿变化存疑。\", \"尚未排除其他外部因素（如换设备、平台限流、节假日）造成的消息量波动。\"]}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 595,
+        "output_tokens": 441,
+        "total_tokens": 1036
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 6959
+    },
+    {
+      "id": "L1",
+      "category": "truncation",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "incomplete-rejected",
+      "requestSha256": "4c95941d089bf4cb115306ffc3ec1d79cdb4766cea8fa4569f847194d5b37021",
+      "schemaSha256": "29636f5abe4357dc37ea9948d95c3394b6a297beea1e36608cc1a7b77412a499",
+      "httpStatus": 200,
+      "responseStatus": "incomplete",
+      "jsonParsePass": null,
+      "schemaPass": null,
+      "schemaErrors": [],
+      "finalText": "{\"",
+      "outcome": "incomplete-rejected",
+      "usage": {
+        "input_tokens": 499,
+        "output_tokens": 1,
+        "total_tokens": 500
+      },
+      "returnedModel": "deepseek-flash",
+      "incompleteReason": "max_output_tokens",
+      "latencyMs": 2320
+    },
+    {
+      "id": "C1",
+      "category": "responses-json-object-control",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_object",
+      "expected": "schema-valid",
+      "requestSha256": "b4bc9758378a0a1f65a4281c47fa13ef220c814aa9d03adabc76c4157294ceaa",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"label\": \"标签测试\", \"count\": 2}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 77,
+        "output_tokens": 13,
+        "total_tokens": 90
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 3542
+    },
+    {
+      "id": "C2",
+      "category": "chat-json-schema-control",
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "mode": "json_schema",
+      "expected": "compatibility-control",
+      "requestSha256": "4824d1d179ebd067fac4e6c4ae3ea176c26165481e471c1c3c5c213e26d67ae7",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 400,
+      "responseStatus": null,
+      "jsonParsePass": null,
+      "schemaPass": null,
+      "schemaErrors": [],
+      "finalText": null,
+      "outcome": "http-rejection",
+      "usage": null,
+      "providerError": {
+        "code": "invalid_request_error",
+        "message": "This response_format type is unavailable now"
+      },
+      "latencyMs": 2445
+    },
+    {
+      "id": "C3",
+      "category": "chat-json-object-control",
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "mode": "json_object",
+      "expected": "schema-valid",
+      "requestSha256": "1f7f0838ecefbc26d8ae20a057ebef35f430d619a96a80e35c5c9545db6344bc",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "stop",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"label\": \"测试\", \"count\": 2}",
+      "outcome": "schema-valid",
+      "usage": {
+        "total_tokens": 89,
+        "prompt_tokens": 77,
+        "completion_tokens": 12
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 1542
+    },
+    {
+      "id": "C4",
+      "category": "responses-no-schema-conflict-control",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_object",
+      "expected": "unconstrained-control",
+      "requestSha256": "45301718755a6f1842eea0cb9fe32fd8bfa5032ff2bb6e44627145b4d94953a4",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": false,
+      "schemaErrors": [
+        {
+          "keyword": "type",
+          "instancePath": "/label",
+          "schemaPath": "#/properties/label/type"
+        },
+        {
+          "keyword": "type",
+          "instancePath": "/count",
+          "schemaPath": "#/properties/count/type"
+        }
+      ],
+      "finalText": "{\"label\":17,\"count\":\"two\"}",
+      "outcome": "schema-invalid",
+      "usage": {
+        "input_tokens": 76,
+        "output_tokens": 9,
+        "total_tokens": 85
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 1731
+    },
+    {
+      "id": "X1",
+      "category": "undocumented-strict-true-probe",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "schema-valid",
+      "requestSha256": "bc0ec5234a5eda94dbd18fb84c11cf40fbb27e5d05de9b919f8dd3ca6cddeb5d",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 200,
+      "responseStatus": "completed",
+      "jsonParsePass": true,
+      "schemaPass": true,
+      "schemaErrors": [],
+      "finalText": "{\"label\": \"17\", \"count\": 2}",
+      "outcome": "schema-valid",
+      "usage": {
+        "input_tokens": 116,
+        "output_tokens": 12,
+        "total_tokens": 128
+      },
+      "returnedModel": "deepseek-flash",
+      "latencyMs": 3607
+    },
+    {
+      "id": "X2",
+      "category": "missing-schema-name-negative-control",
+      "endpoint": "https://api.deepseek.com/responses",
+      "mode": "json_schema",
+      "expected": "http-rejection",
+      "requestSha256": "eeff4465d19956adcb0306c65d1762858bd7833904e5a3e17d11163a7b5c0402",
+      "schemaSha256": "743ced064274e6fc969a94177f946f78d8e584b7b287192575b48026f4a0e9be",
+      "httpStatus": 400,
+      "responseStatus": null,
+      "jsonParsePass": null,
+      "schemaPass": null,
+      "schemaErrors": [],
+      "finalText": null,
+      "outcome": "http-rejection",
+      "usage": null,
+      "providerError": {
+        "code": "invalid_request_error",
+        "message": "Failed to deserialize the JSON body into the target type: text.format: missing field `name` at line 1 column 510"
+      },
+      "latencyMs": 735
+    }
+  ],
+  "skipped": [],
+  "finishedAt": "2026-09-14T05:43:03.127Z",
+  "summary": {
+    "schema-valid": 12,
+    "schema-invalid": 7,
+    "http-rejection": 3,
+    "tool-call-valid": 1,
+    "incomplete-rejected": 1
+  }
+}

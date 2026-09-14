@@ -1,0 +1,375 @@
+{
+  "version": "wememo-instructor-parity-v1",
+  "liveRequests": 0,
+  "validationFixture": "existing-synthetic-demo-offline-only",
+  "inputSha256": "404fce38191da732239d7e68dda64049f7f7da16c71652622ef4181c4799976f",
+  "sourceHashes": {
+    "src/shared/interaction-reasoning-validation.ts": "355ae70280c71daacca31f7dc4e9469bec40f41f29e9c30fa4abade299db2150",
+    "src/main/reasoning/evidence-citation-validator.ts": "7ea172f2e7b423b6539e490c6ebe2685f97b25d7895ff30025f469b6951f814c",
+    "fixtures/import/sample-conversation.json": "36772c70f277c3d75caea5a50f5f00059afe83a3b193544b6c396942ceecb416"
+  },
+  "vectorsMatched": 11,
+  "recordsMatched": 36,
+  "records": [
+    {
+      "caseId": "N1",
+      "repetition": 1,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "N1",
+      "repetition": 1,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "N1",
+      "repetition": 1,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "N2",
+      "repetition": 1,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N2",
+      "repetition": 1,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N2",
+      "repetition": 1,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N3",
+      "repetition": 1,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N3",
+      "repetition": 1,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N3",
+      "repetition": 1,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "Z1",
+      "repetition": 1,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "Z1",
+      "repetition": 1,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "Z1",
+      "repetition": 1,
+      "arm": "instructor-tools",
+      "jsonPass": false,
+      "shapePass": null,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "R1",
+      "repetition": 1,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: ID was not provided in this prompt"
+    },
+    {
+      "caseId": "R1",
+      "repetition": 1,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: ID was not provided in this prompt"
+    },
+    {
+      "caseId": "R1",
+      "repetition": 1,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: ID was not provided in this prompt"
+    },
+    {
+      "caseId": "R2",
+      "repetition": 1,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: finding requires support evidence"
+    },
+    {
+      "caseId": "R2",
+      "repetition": 1,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: finding requires support evidence"
+    },
+    {
+      "caseId": "R2",
+      "repetition": 1,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: finding requires support evidence"
+    },
+    {
+      "caseId": "N1",
+      "repetition": 2,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "N1",
+      "repetition": 2,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: alternative requires only counter/context evidence"
+    },
+    {
+      "caseId": "N1",
+      "repetition": 2,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: alternative requires only counter/context evidence"
+    },
+    {
+      "caseId": "N2",
+      "repetition": 2,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: alternative requires only counter/context evidence"
+    },
+    {
+      "caseId": "N2",
+      "repetition": 2,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N2",
+      "repetition": 2,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "N3",
+      "repetition": 2,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N3",
+      "repetition": 2,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "N3",
+      "repetition": 2,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": false,
+      "citationPass": null,
+      "agrees": true,
+      "safeError": "alternativeExplanations[0]: expected exact keys"
+    },
+    {
+      "caseId": "Z1",
+      "repetition": 2,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "Z1",
+      "repetition": 2,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "Z1",
+      "repetition": 2,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": true,
+      "agrees": true,
+      "safeError": null
+    },
+    {
+      "caseId": "R1",
+      "repetition": 2,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: alternative requires only counter/context evidence"
+    },
+    {
+      "caseId": "R1",
+      "repetition": 2,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: ID was not provided in this prompt"
+    },
+    {
+      "caseId": "R1",
+      "repetition": 2,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: ID was not provided in this prompt"
+    },
+    {
+      "caseId": "R2",
+      "repetition": 2,
+      "arm": "responses-schema",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: finding requires support evidence"
+    },
+    {
+      "caseId": "R2",
+      "repetition": 2,
+      "arm": "instructor-json",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: finding requires support evidence"
+    },
+    {
+      "caseId": "R2",
+      "repetition": 2,
+      "arm": "instructor-tools",
+      "jsonPass": true,
+      "shapePass": true,
+      "citationPass": false,
+      "agrees": true,
+      "safeError": "Invalid evidence citation: finding requires support evidence"
+    }
+  ]
+}
