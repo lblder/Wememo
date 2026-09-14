@@ -13,10 +13,16 @@
 - Old 8-run canary is permanently preserved as `2026-09-14-live-v0-preflight`, status
   `transport qualification failed`. All original artifact hashes are in its new disposition
   sidecar; no original metrics were rewritten. Future V0 must restart from zero.
-- Freeze diagnostics as `d6-provider-diagnostics-v1` before the authorized live probes.
-  No V0 continuation, Prompt experiment, manual quality grading or remote push is in scope.
+- Frozen before live calls: `b3c327b` / `d6-provider-diagnostics-v1` (local).
+- Real qualification completed **15/15 HTTP 200**, five calls per group. A returned final
+  messages; B and C returned tool_calls. C's further calls were not executed. Average
+  latency: A 4.626 s, B 2.237 s, C 1.856 s. All persistence/source/HEAD checks passed.
+- No HTTP/transport failures were reproduced. The old three failures cannot be identified
+  retrospectively. This is a protocol result, not a final schema/citation or quality score.
+- No new canary, V0 continuation, Prompt experiment, manual grading or remote push occurred.
 
-See [P0 method and commands](evaluation/transport/README.md).
+See [P0 method and commands](evaluation/transport/README.md) and
+[real A/B/C results](evaluation/transport/2026-09-14-live-p0/summary.md).
 
 ---
 

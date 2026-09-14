@@ -1,0 +1,46 @@
+{
+  "version": "wememo-provider-qualification-v1",
+  "completedProbes": 15,
+  "httpAttempts": 15,
+  "interrupted": false,
+  "checks": {
+    "sourceHashesMatch": true,
+    "gitHeadUnchanged": true,
+    "persistedExactly": true
+  },
+  "summary": {
+    "A": {
+      "probes": 5,
+      "httpAttempts": 5,
+      "httpStatus": {
+        "200": 5
+      },
+      "protocolPass": 5,
+      "failures": {},
+      "transportCodes": {},
+      "meanDurationMs": 4626
+    },
+    "B": {
+      "probes": 5,
+      "httpAttempts": 5,
+      "httpStatus": {
+        "200": 5
+      },
+      "protocolPass": 5,
+      "failures": {},
+      "transportCodes": {},
+      "meanDurationMs": 2237
+    },
+    "C": {
+      "probes": 5,
+      "httpAttempts": 5,
+      "httpStatus": {
+        "200": 5
+      },
+      "protocolPass": 5,
+      "failures": {},
+      "transportCodes": {},
+      "meanDurationMs": 1856
+    }
+  }
+}
