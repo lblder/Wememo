@@ -14,6 +14,7 @@ import { InteractionReasoner } from '../../reasoning/interaction-reasoner'
 import { LLMProviderError } from '../../reasoning/llm-provider'
 import { ProviderRequestError } from '../../providers/provider-request-error'
 import { DeepSeekToolProtocolError } from '../../providers/deepseek-tool-calling-provider'
+import type { ProviderCallDiagnostic, ProviderDiagnosticObserver } from '../../providers/provider-diagnostic'
 import { directQuestionRequest, type EvaluationProviders } from '../evidence-question-evaluation'
 import { reliabilitySchedule } from './schedule'
 import { type EvaluationSet, type ReliabilityCase, type FixtureVariant, type ReadTarget } from './cases'
@@ -31,13 +32,14 @@ export interface ReliabilityRun {
   catalogCount: number; deliveredCount: number; readTargets: { available: boolean; delivered: boolean }[]; evidenceReadPass: Check
   failurePhase: 'tool-selection' | 'tool-arguments' | 'final-schema' | 'final-citation' | 'provider' | 'budget' | 'cancelled' | 'local' | null
   latencyMs: number; promptHashes: string[]; reviewId: string | null
+  providerDiagnostics: ProviderCallDiagnostic[]
 }
 export interface ReviewItem {
   reviewId: string; question: string; result: NonNullable<OutputAudit['result']>
   evidence: VisibleEvidence[]; coverage: AnalysisContextPack['coverage']
   scores: { groundedness: null; relevance: null; counterAwareness: null; uncertainty: null }; reviewer: null; notes: string
 }
-export type ProviderFactory = (signal: AbortSignal) => EvaluationProviders
+export type ProviderFactory = (signal: AbortSignal, observe?: ProviderDiagnosticObserver) => EvaluationProviders
 export const sha256 = (text: string): string => createHash('sha256').update(text).digest('hex')
 const matches = (evidence: ReadTarget, target: ReadTarget): boolean => (Object.keys(target) as (keyof ReadTarget)[]).every(key => evidence[key] === target[key])
 function mapError(error: unknown): { code: ReliabilityFailure; runtime: string } {
@@ -64,7 +66,7 @@ export async function evaluateReliabilityRun(input: {
     providerPass: null, providerResponses: 0, jsonPass: null, schemaPass: null, citationScopePass: null, citationDirectionPass: null,
     endToEndPass: false, failureCode: null, failureCodes: [], runtimeFailureCode: null, modelCalls: 0, runtimeModelCalls: 0,
     toolCalls: 0, toolProposals: 0, evidenceReadCalls: 0, catalogCount: 0, deliveredCount: 0, readTargets: [], evidenceReadPass: null,
-    failurePhase: null, latencyMs: 0, promptHashes: [], reviewId: null }
+    failurePhase: null, latencyMs: 0, promptHashes: [], reviewId: null, providerDiagnostics: [] }
   let active = true; let audit = unattemptedAudit(); let runtimeOk = false
   let pack: AnalysisContextPack | undefined; let catalog: VisibleEvidence[] = []; const delivered = new Map<string, VisibleEvidence>()
   let effectiveBudgetRejected = false; let protocolRejected = false
@@ -86,7 +88,7 @@ export async function evaluateReliabilityRun(input: {
     if (!pack.coverage.analyzedMessageCount) throw new AgentRunError('no-data')
     const snapshot = pack
     await boundedOperation(async runSignal => {
-      const providers = factory(runSignal)
+      const providers = factory(runSignal, diagnostic => { if (active) record.providerDiagnostics.push(diagnostic) })
       if (mode === 'direct') {
         await new InteractionReasoner({ id: providers.direct.id, async generate(original) {
           const questionRequest = directQuestionRequest(original, testCase.question, snapshot)

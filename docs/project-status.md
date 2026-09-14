@@ -1,3 +1,58 @@
+# D6-P0: Provider Transport Diagnostics
+
+- Added safe per-call diagnostics for HTTP status, DNS/connection failures, timeouts,
+  explicit cancellation, body reading and envelope decoding. Existing runtime error codes
+  and all Prompt/Validator/tool/budget policies remain unchanged.
+- Request IDs are hashed; retry-after is limited to bounded integer seconds. No request,
+  response body, excerpt, scope, credentials or raw error text enters diagnostic records.
+- Independent A/B/C qualification CLI: five sequential calls per group, zero retries.
+  C uses locally constructed, validated two-tool history to test second-round protocol
+  independently of initial model tool selection. It is not an Agent E2E or quality score.
+- Verification: **50 test files / 687 tests PASS**, typecheck and production build PASS.
+  Actual offline CLI persisted all 15 rows and passed source/hash/persistence checks.
+- Old 8-run canary is permanently preserved as `2026-09-14-live-v0-preflight`, status
+  `transport qualification failed`. All original artifact hashes are in its new disposition
+  sidecar; no original metrics were rewritten. Future V0 must restart from zero.
+- Freeze diagnostics as `d6-provider-diagnostics-v1` before the authorized live probes.
+  No V0 continuation, Prompt experiment, manual quality grading or remote push is in scope.
+
+See [P0 method and commands](evaluation/transport/README.md).
+
+---
+
+# D6 V0 Canary — Stopped Before the Remaining 72 Runs
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-14 |
+| Frozen harness | `2d7b755` / `d6-eval-harness-v1` (local, not pushed) |
+| Status | **Canary connectivity check failed; 8/80 completed, 72 not started** |
+| Provider | DeepSeek / `deepseek-flash`, frozen V0 and parameters |
+
+- The harness was committed and tagged before any live call. Pre-freeze verification passed
+  47 test files / 616 tests, typecheck, build and a complete 8 + 72 offline canary exercise.
+- The live canary completed 6 Normal and 2 Stress runs with 12 Provider calls and 9 normal
+  returns. Three Agent runs encountered provider-unavailable; the frozen connectivity gate
+  correctly stopped the batch. Persistence, failure classification, source hashes and commit
+  consistency checks passed. No code, Prompt, model parameters, data or runtime policy was
+  changed during these calls or before the original canary report. No retries or additional API probes were made.
+- Normal canary: Direct E2E 1/3, Agent 0/3. Stress canary: Direct 1/1, Agent 0/1. These are
+  actual canary counts, not the planned full-set 30/30 and 10/10 denominators.
+- Two Agent failures occurred before any tool proposal. Of the two runs meeting the
+  predeclared retrieval targets, one failed final citation direction and one failed its last
+  Provider call. Provider failures are not counted again as independent tool-policy failures.
+- Existing safe errors do not retain HTTP status or curl exit codes, so the specific
+  network/server cause remains undetermined. This batch cannot establish stable connectivity
+  or select a Prompt variant. Human scoring is deferred; the two valid answers remain unscored.
+- The frozen tag is unchanged and no push occurred. Only this status note and the live
+  canary artifacts are new local changes. This batch is now permanently classified as preflight and excluded from future V0;
+  its remaining 72 runs will not be resumed.
+
+See [canary tables and failure distribution](evaluation/reliability/2026-09-14-live-v0/summary.md)
+and [all eight raw metric records](evaluation/reliability/2026-09-14-live-v0/report.json).
+
+---
+
 # D6: Real-Model Reliability Evaluation v2
 
 | Field | Result |

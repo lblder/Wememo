@@ -1,0 +1,21 @@
+{
+  "logicalName": "2026-09-14-live-v0-preflight",
+  "status": "transport qualification failed",
+  "countsTowardV0": false,
+  "completedRuns": 8,
+  "providerCalls": 12,
+  "providerReturns": 9,
+  "remaining72RunsPermanentlyAbandoned": true,
+  "historicalHttpCauses": "unrecoverable: prior adapter discarded HTTP status and curl exit codes",
+  "frozenHarness": "2d7b7554a88013b6078e0ea43d9e055be813af01",
+  "originalArtifactsSha256": {
+    "canary.json": "34aba85a31de75c5d8b68518f3e7ebd6865125d7b4b66288828c84a28bd76d8d",
+    "manifest.json": "9690a2d40ac15f5e8674e39a7866cd42e0875eecb280be6d89c55441a8bc3942",
+    "ratings-template.json": "5f9cbe5b9c68184726137b7dff1c0e7932faf43bd1157fa396935cd25e5f794f",
+    "report.json": "2f5067c9d41c26a78951650c08ae18e3c8d816cf529931a9181fdc90c6f9f8e2",
+    "review-checkpoint.jsonl": "3e40c1eaea541970e01e99870a75972ae55a3e764aa8d57e6a5c30abc2faea49",
+    "review-items.json": "06fe0d8f97923f1d3b0fcae31d04052f89fe7f9eb6cbcdc3bd552d4af75d8594",
+    "runs.jsonl": "f602a7daa096458c8c3da44294e69b0ba76cf51b109b97802f5bc3f94b6a32b9",
+    "summary.md": "013af8d5f61cdc5e30725581ba09130c4e0b32f9bdfa9d3897992b23fe63ec5f"
+  }
+}

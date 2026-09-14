@@ -1,0 +1,24 @@
+[
+  {
+    "reviewId": "1daa688e-1cce-4972-9fe3-774608a85077",
+    "reviewer": null,
+    "scores": {
+      "groundedness": null,
+      "relevance": null,
+      "counterAwareness": null,
+      "uncertainty": null
+    },
+    "notes": ""
+  },
+  {
+    "reviewId": "380ed986-4241-41f7-bda7-45bfbf5f5166",
+    "reviewer": null,
+    "scores": {
+      "groundedness": null,
+      "relevance": null,
+      "counterAwareness": null,
+      "uncertainty": null
+    },
+    "notes": ""
+  }
+]

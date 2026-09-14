@@ -45,7 +45,7 @@ try {
       const { configuration } = loadDeepSeekConfiguration(process.env)
       if (!configuration) throw new Error('Missing model configuration')
       modelId = configuration.modelId; providerId = 'deepseek'
-      factory = runSignal => {
+      factory = (runSignal, observe) => {
         const raw = options.proxy ? createEvaluationCurlTransport(options.proxy, runSignal) : (url, init) => fetch(url, { ...init,
           signal: AbortSignal.any([runSignal, ...(init.signal ? [init.signal] : [])]) })
         const transport = (url, init) => {
@@ -58,7 +58,7 @@ try {
           }
           return raw(url, init)
         }
-        return { direct: new DeepSeekProvider(configuration, transport), agent: new DeepSeekToolCallingProvider(configuration, transport) }
+        return { direct: new DeepSeekProvider(configuration, transport, observe, runSignal), agent: new DeepSeekToolCallingProvider(configuration, transport, observe) }
       }
     } else {
       const { createMockEvaluationProviders } = await server.ssrLoadModule('/src/main/evaluation/mock-evaluation-providers.ts')
@@ -71,6 +71,7 @@ try {
       'src/main/reasoning/reasoning-prompt-builder.ts', 'src/main/reasoning/interaction-reasoner.ts', 'src/main/reasoning/reasoning-output-parser.ts',
       'src/main/reasoning/evidence-citation-validator.ts', 'src/shared/interaction-reasoning-validation.ts',
       'src/main/providers/deepseek-provider.ts', 'src/main/providers/deepseek-tool-calling-provider.ts', 'src/main/providers/deepseek-output-instructions.ts',
+      'src/main/providers/provider-diagnostic.ts',
       ...(await readdir(resolve(root, 'src/main/evaluation/reliability'))).filter(name => name.endsWith('.ts') && !name.endsWith('.test.ts')).map(name => `src/main/evaluation/reliability/${name}`)]
     const sourceHashes = Object.fromEntries(await Promise.all(sourcePaths.map(async path => [path, hash(await readFile(resolve(root, path)))])))
     const cases = RELIABILITY_CASES.filter(item => options.sets.includes(item.set))

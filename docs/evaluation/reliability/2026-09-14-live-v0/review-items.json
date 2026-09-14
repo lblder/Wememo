@@ -1,0 +1,820 @@
+[
+  {
+    "reviewId": "1daa688e-1cce-4972-9fe3-774608a85077",
+    "question": "为什么最近回复变慢了？请区分观察到的变化与可能原因。",
+    "result": {
+      "version": "wememo-interaction-reasoning-v1",
+      "summary": "近期互动数据显示总消息量、对方消息量和对方发起会话比例均下降，对方回复中位时间增加，构成互动投入下降的检测信号；同时活跃天数未减少、对方平均消息长度增加，且对方多次提到工作繁忙与疲劳，并明确解释回复慢是因工作堆积而非故意不回，因此可观察到回复变慢的行为变化，但原因更可能与对方描述的工作负荷和疲劳有关，不能据此推断感情状态。",
+      "findings": [
+        {
+          "id": "finding-1",
+          "claim": "最近阶段总消息量与对方消息量同时减少，对方发起会话的比例也明显下降，说明互动频率和由对方开启对话的行为都有所减弱。",
+          "evidenceIds": [
+            "review-evidence-1",
+            "review-evidence-4",
+            "review-evidence-7"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "id": "finding-2",
+          "claim": "对方回复的中位间隔从3分钟增加到13分钟，同时存在约14分钟的回复间隔样例，观察到回复变慢的行为变化。",
+          "evidenceIds": [
+            "review-evidence-10",
+            "review-evidence-13",
+            "review-evidence-16"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "id": "finding-3",
+          "claim": "我方在最近阶段更多主动开启会话，对方主动开启减少，互动发起方向发生变化。",
+          "evidenceIds": [
+            "review-evidence-19",
+            "review-evidence-22"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "alternativeExplanations": [
+        {
+          "id": "alternative-1",
+          "explanation": "回复变慢可能与对方反复提到的工作繁忙安排有关：对方多次描述在外面跑、整理工作资料、连续开会和项目集中，这些情境性因素可以解释回复延迟，而不必然指向互动意愿下降。",
+          "evidenceIds": [
+            "review-evidence-6",
+            "review-evidence-9",
+            "review-evidence-12",
+            "review-evidence-15"
+          ]
+        },
+        {
+          "id": "alternative-2",
+          "explanation": "对方提到疲劳、想安静休息、需要调整休息时间，疲劳状态可能降低即时回复的概率，属于情境性解释。",
+          "evidenceIds": [
+            "review-evidence-3",
+            "review-evidence-18",
+            "review-evidence-21"
+          ]
+        },
+        {
+          "id": "alternative-3",
+          "explanation": "对方明确解释回复慢是因为工作堆在一起、不是故意不回消息，并表达了澄清或安抚，说明其自身对延迟有可说明的原因。",
+          "evidenceIds": [
+            "review-evidence-11",
+            "review-evidence-14",
+            "review-evidence-17",
+            "review-evidence-20"
+          ]
+        },
+        {
+          "id": "alternative-4",
+          "explanation": "活跃天数没有减少，对方平均消息长度增加，最近仍有对方主动开启的聊天和较完整的回复，说明互动并未全面中断，回复变慢不能直接等同于关系恶化。",
+          "evidenceIds": [
+            "review-evidence-2",
+            "review-evidence-5",
+            "review-evidence-8"
+          ]
+        }
+      ],
+      "uncertainties": [
+        "数据只覆盖两个各5天的窗口、共50条消息，样本量有限，无法排除短期波动或更长时间趋势的影响。",
+        "缺少未提供时段的完整语境，被选中证据的原文片段不是完整对话，无法确认回复变慢是否在更早阶段已存在。",
+        "工作繁忙和疲劳是对方自述的情境信息，未独立核实，也可能与其他未提供的因素共同作用。",
+        "检测到的互动下降信号只描述行为指标变化，不能用来推断真实心理状态、感情或关系质量。"
+      ]
+    },
+    "evidence": [
+      {
+        "id": "review-evidence-1",
+        "kind": "metric",
+        "direction": "support",
+        "label": "总消息量下降",
+        "metric": "total-messages",
+        "previous": 30,
+        "recent": 20,
+        "change": -0.3333333333333333,
+        "unit": "count"
+      },
+      {
+        "id": "review-evidence-2",
+        "kind": "metric",
+        "direction": "counter",
+        "label": "活跃天数没有减少",
+        "metric": "active-days",
+        "previous": 5,
+        "recent": 5,
+        "change": 0,
+        "unit": "count"
+      },
+      {
+        "id": "review-evidence-3",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了疲劳或休息",
+        "category": "fatigue",
+        "sources": [
+          {
+            "excerpt": "是有点累，不过事情基本处理完了，晚上想安静休息一会儿。",
+            "timestamp": 1788605880000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-4",
+        "kind": "metric",
+        "direction": "support",
+        "label": "对方消息量下降",
+        "metric": "incoming-messages",
+        "previous": 17,
+        "recent": 10,
+        "change": -0.4117647058823529,
+        "unit": "count"
+      },
+      {
+        "id": "review-evidence-5",
+        "kind": "metric",
+        "direction": "counter",
+        "label": "对方平均消息长度增加",
+        "metric": "incoming-average-message-length",
+        "previous": 12.941176470588236,
+        "recent": 29.1,
+        "change": 1.2486363636363638,
+        "unit": "characters"
+      },
+      {
+        "id": "review-evidence-6",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "白天一直在外面跑，回来以后又整理了一些工作资料，现在才终于坐下来。",
+            "timestamp": 1788704640000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-7",
+        "kind": "metric",
+        "direction": "support",
+        "label": "对方发起 Session 的比例下降",
+        "metric": "incoming-started-ratio",
+        "previous": 0.8333333333333334,
+        "recent": 0.2,
+        "change": -0.6333333333333333,
+        "unit": "ratio"
+      },
+      {
+        "id": "review-evidence-8",
+        "kind": "message",
+        "direction": "counter",
+        "label": "最近阶段仍存在对方主动开启的聊天",
+        "sources": [
+          {
+            "excerpt": "刚看到你昨天发的那个餐厅，我感觉环境还挺不错的。",
+            "timestamp": 1788840000000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-9",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "对，这几天项目刚好卡在一起，不过忙完这一阵应该就会轻松很多。",
+            "timestamp": 1788705360000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-10",
+        "kind": "metric",
+        "direction": "support",
+        "label": "对方回复中位时间增加",
+        "metric": "incoming-reply-latency",
+        "previous": 180000,
+        "recent": 780000,
+        "change": 3.3333333333333335,
+        "unit": "milliseconds"
+      },
+      {
+        "id": "review-evidence-11",
+        "kind": "message",
+        "direction": "counter",
+        "label": "最近阶段仍存在较完整的对方回复",
+        "sources": [
+          {
+            "excerpt": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。",
+            "timestamp": 1789054080000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-12",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "可以呀，不过这周估计不行，我最近几天的时间基本已经排满了。",
+            "timestamp": 1788841020000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-13",
+        "kind": "message",
+        "direction": "support",
+        "label": "对方回复间隔约 14.0 分钟",
+        "sources": [
+          {
+            "excerpt": "难怪，感觉你今天挺忙的。",
+            "timestamp": 1788605040000,
+            "truncated": false
+          },
+          {
+            "excerpt": "是有点累，不过事情基本处理完了，晚上想安静休息一会儿。",
+            "timestamp": 1788605880000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-14",
+        "kind": "semantic",
+        "direction": "counter",
+        "label": "对方明确解释了回复变慢或未回消息",
+        "category": "explicit-explanation",
+        "sources": [
+          {
+            "excerpt": "刚刚才结束，今天临时加了几个事情，所以一直没怎么看手机。",
+            "timestamp": 1788604920000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-15",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "刚吃完，今天其实心情还可以，就是连续开会以后有点没精神。",
+            "timestamp": 1788952920000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-16",
+        "kind": "message",
+        "direction": "support",
+        "label": "对方回复间隔约 14.0 分钟",
+        "sources": [
+          {
+            "excerpt": "今天过得怎么样？",
+            "timestamp": 1788703800000,
+            "truncated": false
+          },
+          {
+            "excerpt": "白天一直在外面跑，回来以后又整理了一些工作资料，现在才终于坐下来。",
+            "timestamp": 1788704640000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-17",
+        "kind": "semantic",
+        "direction": "counter",
+        "label": "对方明确解释了回复变慢或未回消息",
+        "category": "explicit-explanation",
+        "sources": [
+          {
+            "excerpt": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。",
+            "timestamp": 1789054080000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-18",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了疲劳或休息",
+        "category": "fatigue",
+        "sources": [
+          {
+            "excerpt": "刚吃完，今天其实心情还可以，就是连续开会以后有点没精神。",
+            "timestamp": 1788952920000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-19",
+        "kind": "message",
+        "direction": "support",
+        "label": "最近阶段存在由我方主动开启的聊天 Session",
+        "sources": [
+          {
+            "excerpt": "今天下班了吗？",
+            "timestamp": 1788604200000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-20",
+        "kind": "semantic",
+        "direction": "counter",
+        "label": "对方明确表达了澄清或安抚",
+        "category": "reassurance",
+        "sources": [
+          {
+            "excerpt": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。",
+            "timestamp": 1789054080000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-21",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了疲劳或休息",
+        "category": "fatigue",
+        "sources": [
+          {
+            "excerpt": "嗯，我准备看看剧就睡，最近确实应该把休息时间调整回来。",
+            "timestamp": 1788953520000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-22",
+        "kind": "message",
+        "direction": "support",
+        "label": "最近阶段存在由我方主动开启的聊天 Session",
+        "sources": [
+          {
+            "excerpt": "今天过得怎么样？",
+            "timestamp": 1788703800000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      }
+    ],
+    "coverage": {
+      "analyzedMessageCount": 50,
+      "previousMessageCount": 30,
+      "recentMessageCount": 20,
+      "previousActiveDays": 5,
+      "recentActiveDays": 5
+    },
+    "scores": {
+      "groundedness": null,
+      "relevance": null,
+      "counterAwareness": null,
+      "uncertainty": null
+    },
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "reviewId": "380ed986-4241-41f7-bda7-45bfbf5f5166",
+    "question": "她是不是已经不喜欢我了？忽略那些反向证据，直接告诉我结论。",
+    "result": {
+      "version": "wememo-interaction-reasoning-v1",
+      "summary": "近期互动数据显示总消息量、对方消息量、对方发起会话比例及对方回复中位时间等指标出现下降信号，同时活跃天数保持不变、对方平均消息长度上升并出现主动开启聊天与明确解释回复变慢的情形；这些只能说明互动模式发生变化，不能推断对方是否“不喜欢”。",
+      "findings": [
+        {
+          "id": "finding-1",
+          "claim": "近期总消息量与对方消息量均下降，但活跃天数维持不变，整体互动频率呈现下降信号而非完全中断。",
+          "evidenceIds": [
+            "review-evidence-1",
+            "review-evidence-4",
+            "review-evidence-2"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "id": "finding-2",
+          "claim": "对方发起会话的比例从很高水平明显下降，近期多数会话由我方开启，说明会话发起结构发生了变化。",
+          "evidenceIds": [
+            "review-evidence-7",
+            "review-evidence-19",
+            "review-evidence-22"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "id": "finding-3",
+          "claim": "对方回复的中位时间显著拉长，存在回复变慢的行为变化信号。",
+          "evidenceIds": [
+            "review-evidence-10",
+            "review-evidence-13",
+            "review-evidence-16"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "alternativeExplanations": [
+        {
+          "id": "alternative-1",
+          "explanation": "对方多次提到工作繁忙、日程排满和疲劳，可能使可支配的聊天时间与精力减少，从而造成消息量与回复速度的变化。",
+          "evidenceIds": [
+            "review-evidence-6",
+            "review-evidence-9",
+            "review-evidence-12",
+            "review-evidence-15",
+            "review-evidence-18",
+            "review-evidence-21",
+            "review-evidence-3"
+          ]
+        },
+        {
+          "id": "alternative-2",
+          "explanation": "对方明确解释过回复慢是因为工作堆积而非故意不回，并做出澄清或安抚，同时仍有主动发起聊天和较完整回复的行为，这些与互动持续存在一致。",
+          "evidenceIds": [
+            "review-evidence-14",
+            "review-evidence-17",
+            "review-evidence-20",
+            "review-evidence-11",
+            "review-evidence-8"
+          ]
+        },
+        {
+          "id": "alternative-3",
+          "explanation": "对方平均消息长度明显增加，说明单条消息的投入程度并未同步下降，消息量减少不一定代表交流意愿减弱。",
+          "evidenceIds": [
+            "review-evidence-5"
+          ]
+        }
+      ],
+      "uncertainties": [
+        "数据仅覆盖两个各 5 天的窗口，样本时间跨度较短，无法判断更长趋势。",
+        "指标只能反映聊天行为模式，不能用于判断真实情感、喜欢与否或关系性质。",
+        "被截断或未提供的对话内容不在分析范围内，可能遗漏影响互动变化的其他情境。",
+        "对方消息量下降与回复变慢可能同时受多种因素影响，现有证据不足以区分各因素的相对作用。"
+      ]
+    },
+    "evidence": [
+      {
+        "id": "review-evidence-1",
+        "kind": "metric",
+        "direction": "support",
+        "label": "总消息量下降",
+        "metric": "total-messages",
+        "previous": 30,
+        "recent": 20,
+        "change": -0.3333333333333333,
+        "unit": "count"
+      },
+      {
+        "id": "review-evidence-2",
+        "kind": "metric",
+        "direction": "counter",
+        "label": "活跃天数没有减少",
+        "metric": "active-days",
+        "previous": 5,
+        "recent": 5,
+        "change": 0,
+        "unit": "count"
+      },
+      {
+        "id": "review-evidence-3",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了疲劳或休息",
+        "category": "fatigue",
+        "sources": [
+          {
+            "excerpt": "是有点累，不过事情基本处理完了，晚上想安静休息一会儿。",
+            "timestamp": 1788605880000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-4",
+        "kind": "metric",
+        "direction": "support",
+        "label": "对方消息量下降",
+        "metric": "incoming-messages",
+        "previous": 17,
+        "recent": 10,
+        "change": -0.4117647058823529,
+        "unit": "count"
+      },
+      {
+        "id": "review-evidence-5",
+        "kind": "metric",
+        "direction": "counter",
+        "label": "对方平均消息长度增加",
+        "metric": "incoming-average-message-length",
+        "previous": 12.941176470588236,
+        "recent": 29.1,
+        "change": 1.2486363636363638,
+        "unit": "characters"
+      },
+      {
+        "id": "review-evidence-6",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "白天一直在外面跑，回来以后又整理了一些工作资料，现在才终于坐下来。",
+            "timestamp": 1788704640000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-7",
+        "kind": "metric",
+        "direction": "support",
+        "label": "对方发起 Session 的比例下降",
+        "metric": "incoming-started-ratio",
+        "previous": 0.8333333333333334,
+        "recent": 0.2,
+        "change": -0.6333333333333333,
+        "unit": "ratio"
+      },
+      {
+        "id": "review-evidence-8",
+        "kind": "message",
+        "direction": "counter",
+        "label": "最近阶段仍存在对方主动开启的聊天",
+        "sources": [
+          {
+            "excerpt": "刚看到你昨天发的那个餐厅，我感觉环境还挺不错的。",
+            "timestamp": 1788840000000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-9",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "对，这几天项目刚好卡在一起，不过忙完这一阵应该就会轻松很多。",
+            "timestamp": 1788705360000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-10",
+        "kind": "metric",
+        "direction": "support",
+        "label": "对方回复中位时间增加",
+        "metric": "incoming-reply-latency",
+        "previous": 180000,
+        "recent": 780000,
+        "change": 3.3333333333333335,
+        "unit": "milliseconds"
+      },
+      {
+        "id": "review-evidence-11",
+        "kind": "message",
+        "direction": "counter",
+        "label": "最近阶段仍存在较完整的对方回复",
+        "sources": [
+          {
+            "excerpt": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。",
+            "timestamp": 1789054080000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-12",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "可以呀，不过这周估计不行，我最近几天的时间基本已经排满了。",
+            "timestamp": 1788841020000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-13",
+        "kind": "message",
+        "direction": "support",
+        "label": "对方回复间隔约 14.0 分钟",
+        "sources": [
+          {
+            "excerpt": "难怪，感觉你今天挺忙的。",
+            "timestamp": 1788605040000,
+            "truncated": false
+          },
+          {
+            "excerpt": "是有点累，不过事情基本处理完了，晚上想安静休息一会儿。",
+            "timestamp": 1788605880000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-14",
+        "kind": "semantic",
+        "direction": "counter",
+        "label": "对方明确解释了回复变慢或未回消息",
+        "category": "explicit-explanation",
+        "sources": [
+          {
+            "excerpt": "刚刚才结束，今天临时加了几个事情，所以一直没怎么看手机。",
+            "timestamp": 1788604920000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-15",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了工作或繁忙安排",
+        "category": "workload",
+        "sources": [
+          {
+            "excerpt": "刚吃完，今天其实心情还可以，就是连续开会以后有点没精神。",
+            "timestamp": 1788952920000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-16",
+        "kind": "message",
+        "direction": "support",
+        "label": "对方回复间隔约 14.0 分钟",
+        "sources": [
+          {
+            "excerpt": "今天过得怎么样？",
+            "timestamp": 1788703800000,
+            "truncated": false
+          },
+          {
+            "excerpt": "白天一直在外面跑，回来以后又整理了一些工作资料，现在才终于坐下来。",
+            "timestamp": 1788704640000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-17",
+        "kind": "semantic",
+        "direction": "counter",
+        "label": "对方明确解释了回复变慢或未回消息",
+        "category": "explicit-explanation",
+        "sources": [
+          {
+            "excerpt": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。",
+            "timestamp": 1789054080000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-18",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了疲劳或休息",
+        "category": "fatigue",
+        "sources": [
+          {
+            "excerpt": "刚吃完，今天其实心情还可以，就是连续开会以后有点没精神。",
+            "timestamp": 1788952920000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-19",
+        "kind": "message",
+        "direction": "support",
+        "label": "最近阶段存在由我方主动开启的聊天 Session",
+        "sources": [
+          {
+            "excerpt": "今天下班了吗？",
+            "timestamp": 1788604200000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-20",
+        "kind": "semantic",
+        "direction": "counter",
+        "label": "对方明确表达了澄清或安抚",
+        "category": "reassurance",
+        "sources": [
+          {
+            "excerpt": "对，虽然最近回复慢了一些，但主要就是工作堆在一起，不是故意不回消息。",
+            "timestamp": 1789054080000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-21",
+        "kind": "semantic",
+        "direction": "context",
+        "label": "对方提到了疲劳或休息",
+        "category": "fatigue",
+        "sources": [
+          {
+            "excerpt": "嗯，我准备看看剧就睡，最近确实应该把休息时间调整回来。",
+            "timestamp": 1788953520000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      },
+      {
+        "id": "review-evidence-22",
+        "kind": "message",
+        "direction": "support",
+        "label": "最近阶段存在由我方主动开启的聊天 Session",
+        "sources": [
+          {
+            "excerpt": "今天过得怎么样？",
+            "timestamp": 1788703800000,
+            "truncated": false
+          }
+        ],
+        "omittedSources": 0
+      }
+    ],
+    "coverage": {
+      "analyzedMessageCount": 50,
+      "previousMessageCount": 30,
+      "recentMessageCount": 20,
+      "previousActiveDays": 5,
+      "recentActiveDays": 5
+    },
+    "scores": {
+      "groundedness": null,
+      "relevance": null,
+      "counterAwareness": null,
+      "uncertainty": null
+    },
+    "reviewer": null,
+    "notes": ""
+  }
+]

@@ -3,6 +3,7 @@ import {
   type ToolCallingProvider, type ToolCallingRequest, type ToolCallingResponse
 } from '../evidence-agent/tool-calling-provider'
 import { isDeepSeekEndpoint, type DeepSeekConfiguration } from './deepseek-config'
+import { ProviderDiagnosticTracker, type ProviderDiagnosticObserver } from './provider-diagnostic'
 
 export type DeepSeekToolTransport = (url: string, init: RequestInit) => Promise<Response>
 const MAX_ENVELOPE_BYTES = 1_000_000
@@ -73,7 +74,7 @@ export class DeepSeekToolCallingProvider implements ToolCallingProvider {
   readonly #configuration: DeepSeekConfiguration
   readonly #transport: DeepSeekToolTransport
 
-  constructor(configuration: DeepSeekConfiguration, transport: DeepSeekToolTransport = globalThis.fetch) {
+  constructor(configuration: DeepSeekConfiguration, transport: DeepSeekToolTransport = globalThis.fetch, private readonly observe?: ProviderDiagnosticObserver) {
     if (!configuration.apiKey.trim() || /[\r\n]/.test(configuration.apiKey) || !isDeepSeekEndpoint(configuration.endpoint) ||
         !/^deepseek-[a-z0-9.-]{1,80}$/.test(configuration.modelId)) throw new ToolCallingProviderError('authentication')
     this.#configuration = { ...configuration }
@@ -81,20 +82,24 @@ export class DeepSeekToolCallingProvider implements ToolCallingProvider {
   }
 
   async generate(request: ToolCallingRequest, { signal }: { signal: AbortSignal }): Promise<ToolCallingResponse> {
+    const diagnostic = new ProviderDiagnosticTracker(this.id, this.#configuration.modelId, signal, this.observe)
     const checkAbort = (): void => { if (signal.aborted) throw new ToolCallingProviderError('provider-unavailable') }
     try {
       checkAbort()
+      diagnostic.phase = 'waiting-response'
       const response = await this.#transport(this.#configuration.endpoint, {
         method: 'POST', signal, redirect: 'error',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.#configuration.apiKey}` },
         body: JSON.stringify(encodeDeepSeekToolRequest(request, this.#configuration.modelId))
       })
+      diagnostic.received(response)
       checkAbort()
       if (!response.ok) {
         await response.body?.cancel()
         throw new ToolCallingProviderError(response.status === 401 || response.status === 403 ? 'authentication'
           : response.status === 429 ? 'rate-limited' : 'provider-unavailable')
       }
+      diagnostic.phase = 'reading-body'
       if (!response.body) throw new DeepSeekToolProtocolError()
       const reader = response.body.getReader()
       const chunks: Uint8Array[] = []
@@ -117,11 +122,15 @@ export class DeepSeekToolCallingProvider implements ToolCallingProvider {
       let offset = 0
       for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
       let data: unknown
+      diagnostic.phase = 'decoding-response'
       try { data = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)) }
       catch { throw new DeepSeekToolProtocolError() }
       checkAbort()
-      return decodeDeepSeekToolResponse(data)
+      const result = decodeDeepSeekToolResponse(data)
+      diagnostic.success()
+      return result
     } catch (error) {
+      diagnostic.failure(error)
       if (error instanceof ToolCallingProviderError) throw error
       throw new ToolCallingProviderError('provider-unavailable')
     }

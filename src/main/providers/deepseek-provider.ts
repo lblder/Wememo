@@ -2,6 +2,7 @@ import type { LLMProvider, LLMProviderRequest, LLMProviderResponse } from '../re
 import { isDeepSeekEndpoint, type DeepSeekConfiguration } from './deepseek-config'
 import { ProviderRequestError } from './provider-request-error'
 import { DEEPSEEK_OUTPUT_INSTRUCTIONS } from './deepseek-output-instructions'
+import { ProviderDiagnosticTracker, type ProviderDiagnosticObserver } from './provider-diagnostic'
 
 export const DEEPSEEK_REQUEST_TIMEOUT_MS = 60_000
 export type ProviderTransport = (url: string, init: RequestInit) => Promise<Response>
@@ -15,7 +16,8 @@ export class DeepSeekProvider implements LLMProvider {
   readonly #configuration: DeepSeekConfiguration
   readonly #transport: ProviderTransport
 
-  constructor(configuration: DeepSeekConfiguration, transport: ProviderTransport = globalThis.fetch) {
+  constructor(configuration: DeepSeekConfiguration, transport: ProviderTransport = globalThis.fetch, private readonly observe?: ProviderDiagnosticObserver,
+    private readonly diagnosticSignal?: AbortSignal) {
     if (!configuration.apiKey.trim() || /[\r\n]/.test(configuration.apiKey) || !isDeepSeekEndpoint(configuration.endpoint)) {
       throw new ProviderRequestError('authentication')
     }
@@ -25,8 +27,12 @@ export class DeepSeekProvider implements LLMProvider {
 
   async generate(request: LLMProviderRequest): Promise<LLMProviderResponse> {
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), DEEPSEEK_REQUEST_TIMEOUT_MS)
+    // Observe the caller's existing boundary without changing the Provider port or its deadline.
+    const diagnostic = new ProviderDiagnosticTracker(this.id, this.#configuration.modelId,
+      this.diagnosticSignal ? AbortSignal.any([controller.signal, this.diagnosticSignal]) : controller.signal, this.observe)
+    const timeout = setTimeout(() => controller.abort(new DOMException('Request timeout', 'TimeoutError')), DEEPSEEK_REQUEST_TIMEOUT_MS)
     try {
+      diagnostic.phase = 'waiting-response'
       const response = await this.#transport(this.#configuration.endpoint, {
         method: 'POST', signal: controller.signal, redirect: 'error',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.#configuration.apiKey}` },
@@ -36,11 +42,13 @@ export class DeepSeekProvider implements LLMProvider {
           response_format: { type: 'json_object' }, thinking: { type: 'disabled' }, stream: false, max_tokens: 4096
         })
       })
+      diagnostic.received(response)
       if (!response.ok) {
         await response.body?.cancel()
         throw new ProviderRequestError(response.status === 401 || response.status === 403 ? 'authentication'
           : response.status === 429 ? 'rate-limited' : 'provider-unavailable')
       }
+      diagnostic.phase = 'reading-body'
       if (!response.body) throw new ProviderRequestError('invalid-output')
       const reader = response.body.getReader()
       const chunks: Uint8Array[] = []
@@ -61,6 +69,7 @@ export class DeepSeekProvider implements LLMProvider {
       let offset = 0
       for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
       let data: unknown
+      diagnostic.phase = 'decoding-response'
       try { data = JSON.parse(new TextDecoder().decode(bytes)) } catch { throw new ProviderRequestError('invalid-output') }
       const envelope = data as { choices?: { finish_reason?: string; message?: { role?: string; content?: unknown; tool_calls?: unknown; refusal?: unknown } }[] }
       const choice = envelope?.choices?.[0]
@@ -68,8 +77,10 @@ export class DeepSeekProvider implements LLMProvider {
           choice.message?.role !== 'assistant' || typeof choice.message.content !== 'string' || !choice.message.content.trim() ||
           (choice.message.tool_calls != null && (!Array.isArray(choice.message.tool_calls) || choice.message.tool_calls.length > 0)) ||
           choice.message.refusal) throw new ProviderRequestError('invalid-output')
+      diagnostic.success()
       return { text: choice.message.content, providerId: this.id, modelId: this.#configuration.modelId }
     } catch (error) {
+      diagnostic.failure(error)
       if (controller.signal.aborted) throw new ProviderRequestError('timeout')
       if (error instanceof ProviderRequestError) throw error
       throw new ProviderRequestError('provider-unavailable')
