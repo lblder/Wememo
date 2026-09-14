@@ -1,6 +1,9 @@
 import { ReasoningService } from './services/reasoning-service'
 import { loadDeepSeekConfiguration } from './providers/deepseek-config'
 import { DeepSeekProvider } from './providers/deepseek-provider'
+import { DeepSeekToolCallingProvider } from './providers/deepseek-tool-calling-provider'
+import { EvidenceQuestionService } from './services/evidence-question-service'
+import { registerEvidenceQuestionIpc } from './services/evidence-question-ipc'
 /**
  * Electron 主进程入口。
  *
@@ -61,6 +64,7 @@ import {
 } from './analytics/interaction-analysis-service'
 
 let reasoningService: ReasoningService | undefined
+let evidenceQuestionService: EvidenceQuestionService | undefined
 let applicationWindow: BrowserWindow | undefined
 
 let database: DatabaseSync | undefined
@@ -97,8 +101,13 @@ function initializeDatabase(): void {
     new InteractionAnalysisService(
       messageRepository
     )
-
   const deepseek = loadDeepSeekConfiguration(process.env)
+  const analysis = getInteractionAnalysisService()
+  evidenceQuestionService = new EvidenceQuestionService(
+    analysis,
+    deepseek.configuration ? new DeepSeekToolCallingProvider(deepseek.configuration, net.fetch.bind(net)) : undefined,
+    deepseek.status
+  )
   reasoningService = new ReasoningService(
     interactionAnalysisService,
     deepseek.configuration ? new DeepSeekProvider(deepseek.configuration, net.fetch.bind(net)) : undefined,
@@ -128,6 +137,7 @@ function isTrustedReasoningSender(event: IpcMainInvokeEvent): boolean {
 }
 
 function registerMessageIpc(): void {
+  registerEvidenceQuestionIpc(ipcMain, evidenceQuestionService!, isTrustedReasoningSender)
   ipcMain.handle(DESKTOP_CHANNELS.reasoningStatus, (event) => {
     if (!isTrustedReasoningSender(event) || !reasoningService) throw new Error('Reasoning request rejected')
     return reasoningService.getStatus()
@@ -270,9 +280,14 @@ function createWindow(): void {
     })
 
   applicationWindow = mainWindow
+  const owner = mainWindow.webContents.id
+  mainWindow.webContents.on('render-process-gone', () => evidenceQuestionService?.cancel(owner))
+  mainWindow.webContents.on('did-start-navigation', (_event, _url, _inPlace, isMainFrame) => {
+    if (isMainFrame) evidenceQuestionService?.cancel(owner)
+  })
   mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   mainWindow.webContents.on('will-navigate', (event) => event.preventDefault())
-  mainWindow.on('closed', () => { applicationWindow = undefined })
+  mainWindow.on('closed', () => { evidenceQuestionService?.cancel(owner); applicationWindow = undefined })
 
   mainWindow.once(
     'ready-to-show',

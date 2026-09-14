@@ -9,7 +9,8 @@
     "build": "electron-vite build",
     "postinstall": "install-electron",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "eval:evidence": "node scripts/evaluate-evidence-questions.mjs"
   },
   "packageManager": "pnpm@10.28.0",
   "dependencies": {

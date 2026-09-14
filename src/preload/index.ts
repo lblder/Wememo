@@ -1,4 +1,5 @@
 import type { GenerateReasoningRequest } from '../shared/reasoning-ipc'
+import type { EvidenceQuestionRequest } from '../shared/evidence-question-ipc'
 import {
   contextBridge,
   ipcRenderer
@@ -35,6 +36,9 @@ const platform =
     : 'unknown'
 
 const desktopApi: DesktopApi = Object.freeze({
+  getEvidenceQuestionStatus: () => ipcRenderer.invoke(DESKTOP_CHANNELS.evidenceQuestionStatus),
+  askEvidenceQuestion: (request: EvidenceQuestionRequest) => ipcRenderer.invoke(DESKTOP_CHANNELS.askEvidenceQuestion, request),
+  cancelEvidenceQuestion: () => ipcRenderer.invoke(DESKTOP_CHANNELS.cancelEvidenceQuestion),
   getPlatform: () => platform,
   getReasoningStatus: () => ipcRenderer.invoke(DESKTOP_CHANNELS.reasoningStatus),
   generateReasoning: (request: GenerateReasoningRequest) => ipcRenderer.invoke(DESKTOP_CHANNELS.generateReasoning, request),

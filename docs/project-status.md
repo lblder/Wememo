@@ -1,3 +1,59 @@
+# D5-G G4/G5 Desktop and Evaluation
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-13 |
+| Stage | Desktop Evidence Question + fixed paired evaluation |
+| Status | **Implementation and automated checks PASS; live model reliability NOT established** |
+| Frozen G3 | `1eb76bd` / `d5-g-deepseek-adapter` (local; not pushed) |
+| Frozen G1/G2 | `71aabdf` / `d5-g-agent-runtime` (unchanged) |
+
+- Added a separate EvidenceQuestionService, exact four-field request contract, three narrow
+  status/ask/cancel IPC methods, Preload methods and an independent “证据追问” panel.
+  Renderer submits only question/accountId/conversationId/days. Main creates and validates
+  the snapshot; it injects the frozen Runner and G3 adapter using Electron net.fetch.
+- IPC checks the existing trusted window/main frame/URL boundary. Cancellation takes no
+  Renderer target ID; Main derives the owner from the IPC event. One active question is
+  permitted. Scope unmount, navigation, renderer termination and window close cancel work.
+  Late answers cannot overwrite a cancelled or newly selected scope's UI.
+- UI provides running/success/invalid-model-output/invalid-citation/provider-error/timeout/
+  budget-exceeded/cancelled states plus local request errors. Fixed messages distinguish
+  authentication, rate limits, tool argument failures and missing data. Failed responses carry
+  no result or raw output. Successful citations reuse the canonical D4 evidence view.
+- Added 15 fixed questions across five categories and a runnable, default-offline evaluation
+  CLI. Direct QA and Agent use the same immutable synthetic snapshot and question with
+  alternating order. Reports distinguish unattempted checks from failed checks and record
+  every run, safe errors, calls, latency and explicit rate denominators. No automatic retry,
+  JSON repair, citation repair, secret/raw-response logging or extra tools were added.
+- Automated checks: typecheck PASS; **36 test files / 491 tests PASS** (74 added);
+  production build PASS; git diff --check PASS. New coverage includes service/IPC injection,
+  owner-only cancellation, late response handling, all UI error states, SQLite integration,
+  paired snapshots, denominator accounting, no-data exit and evaluation interruption.
+- Live evaluation: **30/30 planned runs completed**, DeepSeek flash, fixed synthetic Demo,
+  curl local-proxy transport. Direct QA: schema 7/15, citation 2/7, end-to-end 2/15,
+  15 model calls, average 6.17 s. Agent: schema 6/13, citation 0/6, end-to-end 0/15,
+  40 model calls, 39 tool calls, average 10.53 s. Agent had two pre-final budget exits.
+  All 28 invalid results were rejected. No settings or validators were changed after seeing
+  these failures. Quality/entailment/psychological-boundary compliance were not scored.
+- Desktop smoke check completed after explicit user authorization: one click on the synthetic
+  50-message Demo, question “回复变慢还有其他解释吗？”, current-time 7-day comparison.
+  The actual Electron net.fetch path made 3 model calls and 4 tool reads, delivered 18
+  evidence items, and finished in 11.0 s (displayed precision). Final schema validation
+  passed but citation validation failed. UI showed “证据引用校验失败” with the specific
+  invalid-citation code and execution counts; no rejected answer was displayed. No retry.
+  This checks the live desktop failure path; live success/cancellation UI paths were not
+  exercised by this one request. Their automated coverage remains as recorded above.
+  This supplemental GUI run is separate from the fixed 30-run CLI comparison.
+- G4/G5 changes remain local for review. No G4/G5 commit/tag/push or final d5-g tag has
+  been created. This milestone exposes and measures failures; it does not claim the model
+  is ready for dependable end-user answers.
+
+See [evaluation methodology and measured comparison](evaluation/README.md) and
+[complete metrics report](evaluation/reports/2026-09-13-live.json).
+The authorized desktop result is recorded in [GUI smoke metrics](evaluation/reports/2026-09-13-gui-smoke.json).
+
+---
+
 # D5-G G3 Adapter Verification
 
 | Field | Result |

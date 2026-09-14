@@ -1,6 +1,6 @@
 # D5-G：单 Agent 证据追问设计
 
-状态：G1/G2 已冻结于 `71aabdf` / `d5-g-agent-runtime`；G3 PASS，恢复标签 `d5-g-deepseek-adapter`；G4/G5 尚未实施。日期：2026-09-13。
+状态：G1/G2 冻结于 `71aabdf` / `d5-g-agent-runtime`；G3 冻结于 `1eb76bd` / `d5-g-deepseek-adapter`；G4/G5 已实现并完成 30 条真实评估，待审查。模型稳定性未通过验收。日期：2026-09-13。
 实现基线：`1883516` / `d5-desktop-reasoning`；D4 与 D5 Core 保持冻结。
 
 ## 目标与采用条件
@@ -198,4 +198,14 @@ final content。Runner、工具权限、预算、deliveredIds 和 citation valid
 交付 2 条证据，最终 1 项 finding 和 1 项 alternativeExplanation 通过结构和引用校验。
 此前较宽泛问题的 3 次手动尝试分别被结构校验拒绝 2 次、引用校验拒绝 1 次，未放宽规则。
 本次只验收协议闭环；稳定通过率和回答质量尚未建立。CLI 注入 curl 处理本地代理，
-没有接入 Electron IPC/UI。G4/G5 仍待实施；详见项目状态中的完整验收记录。
+该 G3 恢复点没有接入 Electron IPC/UI。
+
+G4 现已新增独立“证据追问”入口与 EvidenceQuestionService，Renderer 仅提交
+question/accountId/conversationId/days；Main 构造快照后调用冻结 Runner。取消以真实窗口为 owner，
+不接受 Renderer 指定目标。失败具有独立 UI 状态，迟到结果不显示，D5-F 固定解释入口不变。
+
+G5 已提供 15 个固定问题与 Direct QA/Agent 配对评估脚本。30 条真实记录全部完成，
+Direct QA 端到端 2/15，Agent 0/15；Agent 的两次预算退出未计入最终结构校验分母。
+没有通过自动修复、补引用或重试提高结果。当前仅确认界面和测量机制完成，不能声称语义质量
+或模型遵循性稳定；暂不提升 Agent 的使用优先级，也不增加能力。
+详见 [评估方法和结果](../evaluation/README.md) 与 [项目状态](../project-status.md)。

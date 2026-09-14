@@ -1,4 +1,5 @@
 import type { GenerateReasoningRequest, GenerateReasoningResponse, ReasoningProviderStatus } from './reasoning-ipc'
+import type { EvidenceQuestionRequest, EvidenceQuestionResponse } from './evidence-question-ipc'
 import type { CanonicalMessage } from './message'
 import type {
   MessageQuery,
@@ -38,6 +39,9 @@ export type DesktopPlatform =
  * Main 与 Preload 使用的 IPC 通道名称。
  */
 export const DESKTOP_CHANNELS = {
+  evidenceQuestionStatus: 'evidence-question:status',
+  askEvidenceQuestion: 'evidence-question:ask',
+  cancelEvidenceQuestion: 'evidence-question:cancel',
   reasoningStatus: 'reasoning:status',
   generateReasoning: 'reasoning:generate',
   importMessages: 'messages:import-json',
@@ -60,6 +64,9 @@ export const DESKTOP_CHANNELS = {
  * - Electron Main API
  */
 export interface DesktopApi {
+  getEvidenceQuestionStatus: () => Promise<ReasoningProviderStatus>
+  askEvidenceQuestion: (request: EvidenceQuestionRequest) => Promise<EvidenceQuestionResponse>
+  cancelEvidenceQuestion: () => Promise<{ cancelled: boolean }>
   getReasoningStatus: () => Promise<ReasoningProviderStatus>
   generateReasoning: (request: GenerateReasoningRequest) => Promise<GenerateReasoningResponse>
 

@@ -260,3 +260,20 @@ h1 {
 .reasoning-citation { margin: 8px 0; padding: 9px 12px; background: #eef5f0; border-radius: 6px; }
 .reasoning-citation summary { cursor: pointer; color: #0d6a3a; }
 .reasoning-citation small, .reasoning-citation blockquote { overflow-wrap: anywhere; }
+
+.evidence-question-panel { border-top: 3px solid #0d6a3a; }
+.evidence-question-panel label { display: block; font-size: 14px; font-weight: 650; }
+.evidence-question-panel textarea { display: block; width: 100%; margin-top: 8px; padding: 12px; resize: vertical; border: 1px solid #9eaFA6; border-radius: 7px; background: #fafcfb; color: #18211d; line-height: 1.6; }
+.question-scope { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+.question-scope select { padding: 7px; border: 1px solid #9eafa6; border-radius: 5px; background: #fff; color: #18211d; }
+.question-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.evidence-question-panel .question-cancel { color: #35433c; background: #fff; border-color: #9eafa6; }
+.question-status { margin: 20px 0 12px; padding: 12px 16px; border-left: 3px solid #366681; background: #f0f5f8; overflow-wrap: anywhere; }
+.question-status p { margin: 5px 0 0; }
+.question-outcome[data-phase="success"] .question-status { border-color: #0d6a3a; background: #eef5f0; }
+.question-outcome [role="alert"] { border-color: #9f3028; background: #fff4ef; }
+.question-outcome[data-phase="cancelled"] .question-status { border-color: #68736e; background: #f4f6f5; }
+.question-diagnostics { margin-top: 12px; color: #68736e; font-size: 13px; }
+.question-diagnostics summary { cursor: pointer; }
+.evidence-question-panel :is(button, textarea, select, summary):focus-visible { outline: 3px solid #366681; outline-offset: 3px; }
+@media (max-width: 620px) { .evidence-question-panel { margin: 16px; padding: 16px; } }
