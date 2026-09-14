@@ -1,3 +1,54 @@
+# D6: Real-Model Reliability Evaluation v2
+
+| Field | Result |
+|---|---|
+| Date | 2026-09-14 |
+| Stage | Independent reliability harness, Normal/Stress repeats, Prompt variants and human review |
+| Status | **Harness and canary checks PASS; V0 live baseline authorized; human review deferred** |
+| Verification | **47 test files / 616 tests PASS**, typecheck PASS, production build PASS |
+| Frozen A | `68764c1` — desktop evidence question and evaluation harness |
+| Frozen B | `da6541c` — provider settings and reasoning diagnostics |
+| Frozen C | `4c68163` — independent structured-output research and experiments |
+
+- The three requested commits were created separately on local main. Every pre-commit full
+  baseline passed typecheck, 543 tests, build and diff checks. Commit A was additionally
+  verified as an independent 491-test snapshot. No tag was moved or created; no push occurred.
+  The working tree was clean after Commit C, before starting the independent D6 changes.
+- D6 defines 10 Normal questions × 3 repeats × 2 modes and 5 Stress questions × 2 repeats
+  × 2 modes: 80 runs per Prompt variant. V0 is unchanged; V1 adds exact fields, V2 adds a
+  checklist to V1, V3 adds a short shape example to V1. Variant/path order rotates.
+- The observational funnel distinguishes JSON, fields, all citation scopes and directions,
+  retaining null for unattempted checks and the original runtime error. It separates
+  unknown aliases from catalog-only aliases and distinguishes support-only from mixed
+  invalid alternatives. Frozen runtime acceptance remains mandatory.
+- Retrieval proxies record predeclared material availability and delivery separately from
+  final validity. Conditional summaries show output failures after retrieval targets are met.
+  Local synthetic injection/context-only snapshots do not alter production Builders or data.
+- Reports are written to new directories with per-run checkpoints, controlled cancellation,
+  source/input hashes and no retries. Only validated synthetic answers receive separate
+  human-review artifacts; all four scores start null. No automatic judge or quality claim.
+- Final verification added 64 tests covering the ordered funnel, mixed failures, exact-field
+  distinctions, catalog-only citations, direction errors, atomic tool batches, final-round
+  budget, 429, no-data, cancellation/late response, timeout, variant scheduling and human
+  ratings. The actual CLI completed **320/320 Mock runs** (Normal 240 / Stress 80) across
+  V0–V3; source hashes and all distinct scheduled tuples were checked. This is a harness
+  result, not model compliance. Empty human input remains 0 reviewed / 320 eligible.
+- The authorized canary gate adds 9 tests. A complete offline canary run paused after
+  6 Normal + 2 Stress, verified persistence/hashes and continued the remaining 72 with
+  no duplicates. The full 80-row schedule and original pair indices are recorded.
+- D6 changes are isolated under evaluation and CLI documentation. Production Renderer, IPC,
+  Provider, Reasoner, Agent Runner, validators and policy budgets remain unchanged from B.
+  The user authorized 80 V0 real runs with an 8-run canary gate; no D6 real API calls
+  have occurred at harness freeze. Prompt, model parameters, validators and budgets are unchanged.
+
+See [D6 methodology, commands and human rubric](evaluation/reliability/README.md) and
+[complete offline ablation metrics](evaluation/reliability/2026-09-14-mock-ablation/report.json).
+D6 harness and its canary gate are being frozen as a separate local commit with the
+`d6-eval-harness-v1` tag before any real V0 call. Human scoring remains deferred.
+The earlier sections below record their implementation-time state; A/B/C are now committed.
+
+---
+
 # Model Settings and Failure Diagnostics
 
 | Field | Result |
